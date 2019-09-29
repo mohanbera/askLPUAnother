@@ -1,0 +1,5 @@
+<root>
+  <item name='freemarker.template.Configuration'>
+    <annotation name='java.lang.Deprecated'/>
+  </item>
+</root>

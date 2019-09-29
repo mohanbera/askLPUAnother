@@ -1,0 +1,249 @@
+<div class="ui divider"></div>
+  <div id="div10001" style="position: relative; display: inline-block; width: 97%; background-color: white; box-shadow: 4px 4px 2px 0px rgba(0,0,0,0.35)" class='ui label'>
+    <div style="float: left">
+      <div class="ui purple horizontal label">Question</div>
+      <div class="ui large label">How to print in java</div>
+    </div>
+    <div style="position:relative; float: right;">
+      <a id=A10001 class="ui blue basic label">See Answers</a>
+      <a class="ui pointing red basic label">By Vishal Kumar</a>
+      <a class="ui teal tag label">72</a>
+      <a class="ui orange label">
+        <i class="calendar alternate outline icon"></i>2019-01-12</a>
+      <button hidden id="edit10001" style=" float: bottom; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);" class="circular ui green icon button">
+        <i class="icon pencil alternate"></i>
+      </button>
+      <script>
+        var bool10001=false;
+
+        $(function(){
+
+
+            $("#A10001").click(function ()
+            {
+
+                $("#edit10001").visible=true;
+                $("#edit10001").show();
+                bool10001 = true;
+                $("#div10001").append("<br>");
+                $.ajax({
+
+                  url: "/answerData",
+
+                  data:
+                    {
+                      data:10001,
+                    },
+                  success: function(data)
+                  {
+                    $("#answerList10001").empty();
+                    $("#answerList10001").append(data);
+                  }
+                });
+
+            });
+
+          var count1=0;
+          $("#edit10001").click(function () {
+            if (count1 === 0) {
+            count1=count1+1;
+              $.ajax({
+
+                url: "/editAnswer",
+
+                data:
+                  {
+                    data: 10001,
+                  },
+                success: function(data)
+                {
+                  if(data!=="login error")
+                  {
+                    $("#answerList10001").append(data);
+                  }
+                  else
+                  {
+                    location.reload();
+                  }
+                }
+              });
+          }
+          });
+
+
+        });
+
+      </script>
+
+    </div>
+    <br>
+    <div class="ui divider"></div>
+    <div id="answerList10001"></div>
+  </div>
+  <div class="ui divider"></div>
+  <div id="div10004" style="position: relative; display: inline-block; width: 97%; background-color: white; box-shadow: 4px 4px 2px 0px rgba(0,0,0,0.35)" class='ui label'>
+    <div style="float: left">
+      <div class="ui purple horizontal label">Question</div>
+      <div class="ui large label">How to print in python</div>
+    </div>
+    <div style="position:relative; float: right;">
+      <a id=A10004 class="ui blue basic label">See Answers</a>
+      <a class="ui pointing red basic label">By Mohan Bera</a>
+      <a class="ui teal tag label">7</a>
+      <a class="ui orange label">
+        <i class="calendar alternate outline icon"></i>2017-12-17</a>
+      <button hidden id="edit10004" style=" float: bottom; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);" class="circular ui green icon button">
+        <i class="icon pencil alternate"></i>
+      </button>
+      <script>
+        var bool10004=false;
+
+        $(function(){
+
+
+            $("#A10004").click(function ()
+            {
+
+                $("#edit10004").visible=true;
+                $("#edit10004").show();
+                bool10004 = true;
+                $("#div10004").append("<br>");
+                $.ajax({
+
+                  url: "/answerData",
+
+                  data:
+                    {
+                      data:10004,
+                    },
+                  success: function(data)
+                  {
+                    $("#answerList10004").empty();
+                    $("#answerList10004").append(data);
+                  }
+                });
+
+            });
+
+          var count1=0;
+          $("#edit10004").click(function () {
+            if (count1 === 0) {
+            count1=count1+1;
+              $.ajax({
+
+                url: "/editAnswer",
+
+                data:
+                  {
+                    data: 10004,
+                  },
+                success: function(data)
+                {
+                  if(data!=="login error")
+                  {
+                    $("#answerList10004").append(data);
+                  }
+                  else
+                  {
+                    location.reload();
+                  }
+                }
+              });
+          }
+          });
+
+
+        });
+
+      </script>
+
+    </div>
+    <br>
+    <div class="ui divider"></div>
+    <div id="answerList10004"></div>
+  </div>
+  <div class="ui divider"></div>
+  <div id="div10024" style="position: relative; display: inline-block; width: 97%; background-color: white; box-shadow: 4px 4px 2px 0px rgba(0,0,0,0.35)" class='ui label'>
+    <div style="float: left">
+      <div class="ui purple horizontal label">Question</div>
+      <div class="ui large label">Where and how?</div>
+    </div>
+    <div style="position:relative; float: right;">
+      <a id=A10024 class="ui blue basic label">See Answers</a>
+      <a class="ui pointing red basic label">By Mohan Bera</a>
+      <a class="ui teal tag label">0</a>
+      <a class="ui orange label">
+        <i class="calendar alternate outline icon"></i>2019-09-29</a>
+      <button hidden id="edit10024" style=" float: bottom; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);" class="circular ui green icon button">
+        <i class="icon pencil alternate"></i>
+      </button>
+      <script>
+        var bool10024=false;
+
+        $(function(){
+
+
+            $("#A10024").click(function ()
+            {
+
+                $("#edit10024").visible=true;
+                $("#edit10024").show();
+                bool10024 = true;
+                $("#div10024").append("<br>");
+                $.ajax({
+
+                  url: "/answerData",
+
+                  data:
+                    {
+                      data:10024,
+                    },
+                  success: function(data)
+                  {
+                    $("#answerList10024").empty();
+                    $("#answerList10024").append(data);
+                  }
+                });
+
+            });
+
+          var count1=0;
+          $("#edit10024").click(function () {
+            if (count1 === 0) {
+            count1=count1+1;
+              $.ajax({
+
+                url: "/editAnswer",
+
+                data:
+                  {
+                    data: 10024,
+                  },
+                success: function(data)
+                {
+                  if(data!=="login error")
+                  {
+                    $("#answerList10024").append(data);
+                  }
+                  else
+                  {
+                    location.reload();
+                  }
+                }
+              });
+          }
+          });
+
+
+        });
+
+      </script>
+
+    </div>
+    <br>
+    <div class="ui divider"></div>
+    <div id="answerList10024"></div>
+  </div>
+  <div class="ui divider"></div>
+
+
