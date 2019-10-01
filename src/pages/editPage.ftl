@@ -41,7 +41,8 @@
           success: function (data) {
             console.log(data);
             if (data === "OK") {
-              $("#answerList${ID}").empty();
+              console.log(data+" "+"gotit");
+              addNew();
             } else {
               location.reload();
             }
@@ -60,6 +61,7 @@
 
     function addNew()
     {
+      console.log("Sending data");
       $.ajax({
 
         url: "/answerData",
@@ -70,7 +72,8 @@
           },
         success: function(data)
         {
-          if(data!=="login error")
+          console.log("Got the data");
+          if(data!=="login error" && data!=='not found')
           {
             $("#answerList${ID}").empty();
             $("#answerList${ID}").append(data);

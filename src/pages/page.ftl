@@ -22,7 +22,8 @@
 
             $("#${str.buttonID}").click(function ()
             {
-
+              if(bool${str.ID}===false)
+              {
                 $("#edit${str.ID}").visible=true;
                 $("#edit${str.ID}").show();
                 bool${str.ID} = true;
@@ -37,11 +38,14 @@
                     },
                   success: function(data)
                   {
-                    $("#answerList${str.ID}").empty();
-                    $("#answerList${str.ID}").append(data);
+                    if(data!=='not found')
+                    {
+                      $("#answerList${str.ID}").empty();
+                      $("#answerList${str.ID}").append(data);
+                    }
                   }
                 });
-
+              }
             });
 
           var count1=0;

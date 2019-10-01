@@ -11,18 +11,20 @@ import io.vertx.core.http.Cookie;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClient;
 import io.vertx.ext.web.Router;
 
 import java.io.*;
+import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
 
 public class MainVerticle extends AbstractVerticle
 {
+
+  ClassLoader classLoader=getClass().getClassLoader();
 
   MongoClient mongoClient=null;
   JsonObject mongoconfig=null;
@@ -46,7 +48,7 @@ public class MainVerticle extends AbstractVerticle
   @Override
   public void init(Vertx vertx, Context context)
   {
-    String uri = "mongodb://localhost:27017";
+    String uri = "mongodb://52.14.209.114:27017";
     String db = "mydb";
 
     mongoconfig = new JsonObject()
@@ -98,7 +100,7 @@ public class MainVerticle extends AbstractVerticle
 
     ////////////////////////////////// For Mongo Connection ////////////////////////////////
 
-
+    startPromise.complete();
 
     ////////////////////////////////// Creating a new vertex /////////////////////////////
 
@@ -358,7 +360,6 @@ public class MainVerticle extends AbstractVerticle
     {
       HttpServerRequest request=req.request();
       HttpServerResponse response=req.response();
-
       String ID=request.getParam("data");
 
       JsonObject jsonObject=new JsonObject().put("ID",ID);
@@ -366,7 +367,7 @@ public class MainVerticle extends AbstractVerticle
       ArrayList<HashMap<String,String>> arrayList=new ArrayList<>();
       mongoClient.findOne("ques",jsonObject,null,res->
       {
-        if(res.succeeded())
+        if(res.succeeded() && res.result().getJsonArray("answers").size()>0)
         {
           JsonArray jsonArray=res.result().getJsonArray("answers");
           ArrayList<Integer> arrayList1=new ArrayList<>();
@@ -393,6 +394,7 @@ public class MainVerticle extends AbstractVerticle
                 dislike=jsonObject2.getString("dislike");
                 pp=jsonObject2.getString("pp");
 
+                hashMap.put("ID",answerID);
                 hashMap.put("name",name);
                 hashMap.put("author",author);
                 hashMap.put("date",date);
@@ -401,18 +403,25 @@ public class MainVerticle extends AbstractVerticle
                 hashMap.put("pp",pp);
                 arrayList.add(hashMap);
               }
+              else
+              {
+                response.end("not found");
+              }
               arrayList1.add(1);
               if(arrayList1.size()==jsonArray.size())
               {
                 Collections.sort(arrayList, (o1, o2) -> Integer.parseInt(o2.get("like"))-Integer.parseInt(o1.get("like")));
                 if(!response.ended())
                 {
-                  System.out.println("HERE3");
                   returnQuestionAnswers(response,arrayList,ID);
                 }
               }
             });
           }
+        }
+        else
+        {
+          response.end("not found");
         }
       });
     });
@@ -476,7 +485,10 @@ public class MainVerticle extends AbstractVerticle
         jsonObject.put("ID",String.valueOf(num00));
 
         mongoClient.findOne("ques",jsonObject,null,res->{
-          priorityQueue1.poll();
+          if(priorityQueue1.size()>0)
+          {
+            priorityQueue1.poll();
+          }
           String date="";
           String views="";
           String author="";
@@ -588,6 +600,7 @@ public class MainVerticle extends AbstractVerticle
                                 if(res7.succeeded())
                                 {
                                   response.end("OK");
+                                  //JsonObject jsonObject11=new JsonObject().put()
                                 }
                                 else
                                 {
@@ -624,6 +637,213 @@ public class MainVerticle extends AbstractVerticle
 
     });
 
+
+    /////////////////////////////  action for like button //////////////////////////////////
+
+    router.get("/like").handler(all->
+    {
+      HttpServerRequest request=all.request();
+      HttpServerResponse response=all.response();
+
+      int count1=request.cookieCount();
+      if(count1>0)
+      {
+        Cookie cookie=request.getCookie("info");
+        if(cookie!=null)
+        {
+          String code=cookie.getValue();
+          JsonObject jsonObject=new JsonObject().put("code",code);
+          mongoClient.findOne("userInfo",jsonObject,null,res1->
+          {
+            if(res1.succeeded())
+            {
+              if(res1.result()!=null)
+              {
+                String regNo=res1.result().getString("regNo");
+                String ansID=request.getParam("ansID");
+                JsonObject jsonObject1=new JsonObject().put("ID",ansID);
+                mongoClient.findOne("ans",jsonObject1,null,res2->
+                {
+                  if(res2.succeeded())
+                  {
+                    if(res2.result()!=null)
+                    {
+                      String like=res2.result().getString("like");
+                      int likes=Integer.parseInt(like);
+                      JsonArray jsonArray=res2.result().getJsonArray("likeID");
+                      HashSet<String> hashSet=new HashSet<>();
+                      for(Object jsonObject2:jsonArray)
+                      {
+                        hashSet.add(jsonObject2.toString());
+                      }
+                      if(hashSet.contains(regNo))
+                      {
+                        response.end("not eligible");
+                      }
+                      else
+                      {
+                        String newLike=String.valueOf(likes+1);
+                        JsonObject jsonObject3=new JsonObject().put("$set",new JsonObject().put("like",newLike));
+                        mongoClient.updateCollection("ans",jsonObject1,jsonObject3,res3->
+                        {
+                          if(res3.succeeded())
+                          {
+                            JsonObject jsonObject5=new JsonObject().put("$push",new JsonObject().put("likeID",regNo));
+                            mongoClient.updateCollection("ans",jsonObject1,jsonObject5,res5->
+                            {
+                              if(res5.succeeded())
+                              {
+                                response.end("OK");
+                              }
+                              else
+                              {
+                                response.end("error");
+                              }
+                            });
+                          }
+                          else
+                          {
+                            response.end("error");
+                          }
+                        });
+                      }
+                    }
+                    else
+                    {
+                      response.end("error");
+                    }
+                  }
+                  else
+                  {
+                    response.end("error");
+                  }
+                });
+              }
+              else
+              {
+                sendErrorMessage(response);
+              }
+            }
+            else
+            {
+              sendErrorMessage(response);
+            }
+          });
+        }
+        else
+        {
+          sendErrorMessage(response);
+        }
+      }
+      else
+      {
+        sendErrorMessage(response);
+      }
+    });
+
+
+    ///////////////////////////// for handling dislike action /////////////////////////////
+
+    router.get("/dislike").handler(all->{
+
+      HttpServerRequest request=all.request();
+      HttpServerResponse response=all.response();
+
+      int count1=request.cookieCount();
+      if(count1>0)
+      {
+        Cookie cookie=request.getCookie("info");
+        if(cookie!=null)
+        {
+          String code=cookie.getValue();
+          JsonObject jsonObject=new JsonObject().put("code",code);
+          mongoClient.findOne("userInfo",jsonObject,null,res1->
+          {
+            if(res1.succeeded())
+            {
+              if(res1.result()!=null)
+              {
+                String resgNo=res1.result().getString("regNo");
+                String ID=request.getParam("ansID");
+                JsonObject jsonObject1=new JsonObject().put("ID",ID);
+                mongoClient.findOne("ans",jsonObject1,null,res2->
+                {
+                  if(res2.succeeded())
+                  {
+                    if(res2.result()!=null)
+                    {
+                      String dislike=res2.result().getString("dislike");
+                      JsonArray jsonArray=res2.result().getJsonArray("dislikeID");
+                      HashSet<String> hashSet=new HashSet<>();
+                      for(Object object:jsonArray)
+                      {
+                        hashSet.add(object.toString());
+                      }
+                      if(hashSet.contains(resgNo))
+                      {
+                        response.end("not eligible");
+                      }
+                      else
+                      {
+                        JsonObject jsonObject2=new JsonObject().put("ID",ID);
+                        JsonObject jsonObject3=new JsonObject().put("$push",new JsonObject().put("dislikeID",resgNo));
+                        mongoClient.updateCollection("ans",jsonObject2,jsonObject3,res3->{
+                          if(res3.succeeded())
+                          {
+                            int dislikes=Integer.parseInt(dislike);
+                            dislikes++;
+                            JsonObject jsonObject5=new JsonObject().put("$set",new JsonObject().put("dislike",String.valueOf(dislikes)));
+                            mongoClient.updateCollection("ans",jsonObject2,jsonObject5,res5->
+                            {
+                              if(res5.succeeded())
+                              {
+                                response.end("OK");
+                              }
+                              else
+                              {
+                                response.end("error");
+                              }
+                            });
+                          }
+                          else
+                          {
+                            response.end("error");
+                          }
+                        });
+                      }
+                    }
+                    else
+                    {
+                      response.end("error");
+                    }
+                  }
+                  else
+                  {
+                    response.end("error");
+                  }
+                });
+              }
+              else
+              {
+                sendErrorMessage(response);
+              }
+            }
+            else
+            {
+              sendErrorMessage(response);
+            }
+          });
+        }
+        else
+        {
+          sendErrorMessage(response);
+        }
+      }
+      else
+      {
+        sendErrorMessage(response);
+      }
+    });
     ///////////////////////////// new question editor /////////////////////////////////////
 
     router.get("/newQuesEdit").handler(req->{
@@ -745,6 +965,7 @@ public class MainVerticle extends AbstractVerticle
         sendErrorMessage(response);
       }
     });
+
 
   }
 
