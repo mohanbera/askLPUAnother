@@ -48,7 +48,7 @@ public class MainVerticle extends AbstractVerticle
   @Override
   public void init(Vertx vertx, Context context)
   {
-    String uri = "mongodb://52.14.209.114:27017";
+    String uri = "mongodb://localhost:27017";
     String db = "mydb";
 
     mongoconfig = new JsonObject()
