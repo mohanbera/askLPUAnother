@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+
+        $(document).ready(function(){
+          // All your normal JS code goes in here
+          $('.ui.rating')
+            .rating('setting', 'onRate', function(value) {
+              console.log("OK");
+              $(this).rating('disable');
+            });
+      });
+
+        $("#btn1").click(function () {
+          $("#div1").append("<div class=\"ui star rating\" data-rating=\"3\"></div>");
+          $("#div1").append("<script>$('.ui.rating')\n" +
+            "            .rating('setting', 'onRate', function(value) {\n" +
+            "              console.log(\"OK\");\n" +
+            "              $(this).rating('disable');\n" +
+            "            });");
+        })
+
+
+    });
+  </script>
+</head>
+<body>
+
+
+<button id="btn1">click</button>
+<div id="div1">
+<div class="ui star rating" data-rating="3"></div>
+<div class="ui star rating" data-rating="3"></div>
+</div>
+</body>
+</html>

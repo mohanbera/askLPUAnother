@@ -6,74 +6,23 @@
         <a class="header">${str.author} <div class="ui red horizontal label">${str.date}</div></a>
         <div class="description"><b>${str.name}</b></div>
       </div>
-      <a id="like${str.ID}" style='color: white; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);' class="ui circular label">${str.like}</a>
-      <a id="disLike${str.ID}" style='color: white; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);' class="ui circular label">${str.dislike}</a>
+      <a onclick="editComment(${str.ID})" style='box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);' class="ui circular label"><i class="paint brush icon"></i></a>
+      <a id="showComments${str.ID}" onclick="showCommentsAction(${str.ID})" style='box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);' class="ui circular label"><i class="comment outline icon "></i>${str.comCount}</a>
+      <div id="ystar.${str.ID}" style="padding-left: 50px" class="ui small star rating" data-rating="${str.yrating}"></div>
+      <a id="numLike${str.ID}" style='box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);' class="ui circular label"><i class="heart icon"></i>${str.like}</a>
+      <a id="numDislike${str.ID}" style='box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);' class="ui circular label"><i class="thumbs down outline icon"></i>${str.dislike}</a>
+      <div id="bstar.${str.ID}" class="ui small rating" data-rating="${str.brating}">
+      </div>
     </div>
   </div>
-  <script>
-    $(function(){
-
-      $("#like${str.ID}").click(function () {
-        $.ajax({
-
-          url: "/like",
-
-          data:
-            {
-              ansID:${str.ID},
-            },
-          success: function(data)
-          {
-            if(data==='not eligible' || data==='error')
-            {
-              alert(data);
-            }
-            else if(data==='login error')
-            {
-              location.reload();
-            }
-            else
-            {
-              var num1=$("#like${str.ID}").html();
-              var num2=parseInt(num1);
-              num2=num2+1;
-              $("#like${str.ID}").html(num2);
-            }
-          }
-        });
-      });
-
-      $("#disLike${str.ID}").click(function () {
-        $.ajax({
-
-          url: "/dislike",
-
-          data:
-            {
-              ansID:${str.ID},
-            },
-          success: function(data)
-          {
-            if(data==='not eligible' || data==='error')
-            {
-              alert(data);
-            }
-            else if(data==='login error')
-            {
-              location.reload();
-            }
-            else
-            {
-              var num1=$("#disLike${str.ID}").html();
-              var num2=parseInt(num1);
-              num2=num2+1;
-              $("#disLike${str.ID}").html(num2);
-            }
-          }
-        });
-      });
-
-    });
-  </script>
+  <div id="comments${str.ID}">
+  </div>
 </#list>
-
+<script>
+  $('ui.rating').rating('clearable',false);
+  $('.ui.rating')
+    .rating('setting', 'onRate', function(value) {
+      handleRating(this.id, value, this);
+      $(this).rating('disable');
+    });
+</script>

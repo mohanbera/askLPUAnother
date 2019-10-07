@@ -8,9 +8,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script type="text/javascript">
+
+
     $(document).ready(function(){
 
-      //$("body").css('background-image','url(/background)');
+      $("body").css('background-image','url(/background)');
       var signIn=true;
       var signUp=false;
 
@@ -28,7 +30,6 @@
         {
           var regNo=$("#regNoInput").val();
           var password=$("#passwordInput").val();
-          console.log(regNo+" "+password);
           $.ajax({
 
             url: "/signInData",
@@ -42,7 +43,7 @@
             {
               if(data==='OK')
               {
-                console.log("YES");
+
               }
               else if(data==='error' && error===false)
               {

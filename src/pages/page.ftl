@@ -35,6 +35,7 @@
                   data:
                     {
                       data:${str.ID},
+                      count:"1",
                     },
                   success: function(data)
                   {

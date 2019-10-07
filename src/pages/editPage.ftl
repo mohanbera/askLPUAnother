@@ -5,7 +5,7 @@
       <a class="header"> ${name} <div class="ui red horizontal label">${today}</div></a>
     </div>
       <div class="ui fluid icon input">
-        <textarea id="text${ID}" style="position: relative; left:33px; width: 60%; box-shadow: 4px 4px 2px 0px rgba(0,0,0,0.35); border-radius: 5px; outline: none" placeholder="Enter you answer"></textarea>
+        <textarea id="text${ID}" style="position: relative; left:33px; width: 60%; box-shadow: 4px 4px 2px 0px rgba(0,0,0,0.35); border-radius: 5px; outline: none" placeholder="Enter your answer"></textarea>
       <br>
         <br>
         <div style="position: relative; left: 33px;">
@@ -28,7 +28,6 @@
       var text = $("#text${ID}").val();
       text=text.trim();
       if(text.length>0) {
-        console.log("HERE1");
         $.ajax({
 
           url: "/editData",
@@ -39,9 +38,7 @@
               data: text,
             },
           success: function (data) {
-            console.log(data);
             if (data === "OK") {
-              console.log(data+" "+"gotit");
               addNew();
             } else {
               location.reload();
@@ -61,7 +58,6 @@
 
     function addNew()
     {
-      console.log("Sending data");
       $.ajax({
 
         url: "/answerData",
@@ -72,7 +68,6 @@
           },
         success: function(data)
         {
-          console.log("Got the data");
           if(data!=="login error" && data!=='not found')
           {
             $("#answerList${ID}").empty();

@@ -13,6 +13,7 @@ import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.mongo.FindOptions;
 import io.vertx.ext.mongo.MongoClient;
 import io.vertx.ext.web.Router;
 
@@ -24,7 +25,6 @@ import java.util.*;
 public class MainVerticle extends AbstractVerticle
 {
 
-  ClassLoader classLoader=getClass().getClassLoader();
 
   MongoClient mongoClient=null;
   JsonObject mongoconfig=null;
@@ -35,6 +35,9 @@ public class MainVerticle extends AbstractVerticle
   Template template3=configuration.getTemplate("src/pages/homePage.ftl");
   Template template5=configuration.getTemplate("src/pages/editPage.ftl");
   Template template7=configuration.getTemplate("src/pages/newQuesEditor.ftl");
+  Template template9=configuration.getTemplate("src/pages/commentPage.ftl");
+  Template template10=configuration.getTemplate("src/pages/allCommentsPage.ftl");
+  Template template11=configuration.getTemplate("src/pages/secAnswer.ftl");
 
   /////////////////////// for storing the keywords /////////////////////////////////////
   HashMap<String, HashSet<Integer>> keyWords=new HashMap<>();
@@ -87,11 +90,7 @@ public class MainVerticle extends AbstractVerticle
           }
         }
       }
-
-
-
     });
-
   }
 
   /////////////////////////// for storing the user info hash code ///////////////////////////
@@ -117,37 +116,7 @@ public class MainVerticle extends AbstractVerticle
 
     router.get("/test").handler(req->
     {
-      JsonObject query=new JsonObject().put("name","first");
-      JsonObject jsonObject = new JsonObject();
-      jsonObject.put("$push", new JsonObject().put("team","BAN"));
-
-      mongoClient.updateCollection("test",query,jsonObject,res->
-      {
-        if (res.succeeded())
-        {
-          System.out.println("YO");
-        }
-        else
-        {
-          System.out.println("NO");
-        }
-      });
-
-      JsonObject query1=new JsonObject().put("name","first");
-
-      mongoClient.find("test",query1,res->
-      {
-        String ans1="";
-        if(res.succeeded())
-        {
-          JsonArray jsonArray=(res.result().get(0).getJsonArray("team"));
-          for(Object o:jsonArray)
-          {
-            ans1+=o.toString();
-          }
-        }
-        req.response().end(ans1);
-      });
+      req.response().end("OK");
     });
 
 
@@ -282,10 +251,152 @@ public class MainVerticle extends AbstractVerticle
       }
     });
 
+   ////////////////////////////////// for handling yrating star //////////////////////////////////
 
-    router.get("/hello").handler(req->
+    router.get("/rating").handler(all->
     {
+      HttpServerRequest request=all.request();
+      HttpServerResponse response=all.response();
 
+      int cookieCount=request.cookieCount();
+      if(cookieCount!=0)
+      {
+        Cookie cookie=request.getCookie("info");
+        if(cookie!=null)
+        {
+          String code=cookie.getValue();
+          JsonObject jsonObject1=new JsonObject().put("code",code);
+          mongoClient.findOne("userInfo",jsonObject1,null,res1->
+          {
+            if(res1.succeeded())
+            {
+              String regNo=res1.result().getString("regNo");
+              String ID=request.getParam("ID");
+              String rating=request.getParam("val");
+              String type=request.getParam("type");
+              String collectionName="";
+              if(type.equals("Y"))
+              {
+                collectionName="yrating";
+              }
+              else
+              {
+                collectionName = "brating";
+              }
+              JsonObject query1=new JsonObject().put("ID",ID);
+              mongoClient.findOne(collectionName,query1,null,resA->
+              {
+                int preRating=0;
+                if(resA.succeeded())
+                {
+                  if(resA.result()!=null)
+                  {
+                    if(resA.result().containsKey(regNo))
+                    {
+                      preRating=resA.result().getInteger(regNo);
+                    }
+                  }
+                  int dif=Integer.parseInt(rating)-preRating;
+                  JsonObject q1=new JsonObject().put("ID",ID);
+                  JsonObject q2=new JsonObject().put("$set",new JsonObject().put(regNo,Integer.parseInt(rating)));
+
+                  String collectionName1="";
+                  if(type.equals("Y"))
+                  {
+                    collectionName1="yrating";
+                  }
+                  else
+                  {
+                    collectionName1 = "brating";
+                  }
+                  mongoClient.updateCollection(collectionName1,q1,q2,resB->
+                  {
+                    if(resB.succeeded())
+                    {
+                      if(type.equals("Y"))
+                      {
+                        JsonObject qu1=new JsonObject().put("ID",ID);
+                        mongoClient.findOne("ans",qu1,null,resC->
+                        {
+                          if(resC.succeeded() && resC.result()!=null)
+                          {
+                            String preLike=resC.result().getString("like");
+                            int newLike=Integer.parseInt(preLike)+dif;
+                            JsonObject qu2=new JsonObject().put("$set",new JsonObject().put("like",String.valueOf(newLike)));
+                            mongoClient.updateCollection("ans",qu1,qu2,resD->
+                            {
+                              if(resD.succeeded())
+                              {
+                                response.end("OK "+dif);
+                              }
+                              else
+                              {
+                                response.end("error");
+                              }
+                            });
+                          }
+                          else
+                          {
+                            response.end("error");
+                          }
+                        });
+                      }
+                      else
+                      {
+                        JsonObject qu1=new JsonObject().put("ID",ID);
+                        mongoClient.findOne("ans",qu1,null,resC->
+                        {
+                          if(resC.succeeded() && resC.result()!=null)
+                          {
+                            String preDislike=resC.result().getString("dislike");
+                            int newDislike=Integer.parseInt(preDislike)+dif;
+                            JsonObject qu2=new JsonObject().put("$set",new JsonObject().put("dislike",String.valueOf(newDislike)));
+                            mongoClient.updateCollection("ans",qu1,qu2,resD->
+                            {
+                              if(resD.succeeded())
+                              {
+                                response.end("OK "+dif);
+                              }
+                              else
+                              {
+                                response.end("error");
+                              }
+                            });
+                          }
+                          else
+                          {
+                            response.end("error");
+                          }
+                        });
+                      }
+                    }
+                    else
+                    {
+                      response.end("error");
+                    }
+                  });
+                }
+                else
+                {
+                  response.end("error");
+                }
+              });
+            }
+            else
+            {
+              sendErrorMessage(response);
+            }
+          });
+        }
+        else
+        {
+          sendErrorMessage(response);
+        }
+      }
+      else
+      {
+        sendErrorMessage(response);
+      }
     });
 
 
@@ -355,75 +466,335 @@ public class MainVerticle extends AbstractVerticle
       }
     });
 
-
-    router.get("/answerData").handler(req->
+    ////////////////////////////////// handle comment options /////////////////////////////////
+    router.get("/editComment").handler(all->
     {
-      HttpServerRequest request=req.request();
-      HttpServerResponse response=req.response();
-      String ID=request.getParam("data");
+      HttpServerRequest request=all.request();
+      HttpServerResponse response=all.response();
 
-      JsonObject jsonObject=new JsonObject().put("ID",ID);
-
-      ArrayList<HashMap<String,String>> arrayList=new ArrayList<>();
-      mongoClient.findOne("ques",jsonObject,null,res->
+      int cookieCount1=request.cookieCount();
+      if(cookieCount1>0)
       {
-        if(res.succeeded() && res.result().getJsonArray("answers").size()>0)
+        Cookie cookie=request.getCookie("info");
+        if(cookie!=null)
         {
-          JsonArray jsonArray=res.result().getJsonArray("answers");
-          ArrayList<Integer> arrayList1=new ArrayList<>();
-          for(Object object:jsonArray)
+          String code=cookie.getValue();
+          JsonObject jsonObject=new JsonObject().put("code",code);
+          mongoClient.findOne("userInfo",jsonObject,null,res1->
           {
-            String answerID=object.toString();
-            JsonObject jsonObject1=new JsonObject().put("ID",answerID);
-            mongoClient.findOne("ans",jsonObject1,null,res1->
+            if(res1.succeeded() && res1.result()!=null)
             {
-              String name="";
-              String author="";
-              String date="";
-              String like="";
-              String dislike="";
-              String pp="";
-              if(res1.succeeded())
-              {
-                JsonObject jsonObject2=res1.result();
-                HashMap<String,String> hashMap=new HashMap<>();
-                name=jsonObject2.getString("name");
-                author=jsonObject2.getString("author");
-                date=jsonObject2.getString("date");
-                like=jsonObject2.getString("like");
-                dislike=jsonObject2.getString("dislike");
-                pp=jsonObject2.getString("pp");
+              String pp=res1.result().getString("pp");
+              String name=res1.result().getString("name");
+              String ID=request.getParam("ID");
+              String today=String.valueOf(LocalDate.now());
+              HashMap<String,String> hashMap=new HashMap<>();
+              hashMap.put("pp",pp);
+              hashMap.put("name",name);
+              hashMap.put("ID",ID);
+              hashMap.put("today",today);
+              returnNewCommentEditPage(response,hashMap);
+            }
+            else
+            {
+              sendErrorMessage(response);
+            }
+          });
+        }
+        else
+        {
+          sendErrorMessage(response);
+        }
+      }
+      else
+      {
+        sendErrorMessage(response);
+      }
+    });
 
-                hashMap.put("ID",answerID);
-                hashMap.put("name",name);
-                hashMap.put("author",author);
-                hashMap.put("date",date);
-                hashMap.put("like",like);
-                hashMap.put("dislike",dislike);
-                hashMap.put("pp",pp);
-                arrayList.add(hashMap);
+
+    //////////////////////////////// Save comment //////////////////////////////////
+
+    router.get("/saveComment").handler(all->
+    {
+      HttpServerRequest request=all.request();
+      HttpServerResponse response=all.response();
+
+      int cookieCount=request.cookieCount();
+      if(cookieCount>0)
+      {
+        Cookie cookie=request.getCookie("info");
+        if(cookie!=null)
+        {
+          String code=cookie.getValue();
+          JsonObject query1=new JsonObject().put("code",code);
+
+          mongoClient.findOne("userInfo",query1,null,res1->
+          {
+            if(res1.succeeded() && res1.result()!=null)
+            {
+              String name=res1.result().getString("name");
+              String pp=res1.result().getString("pp");
+              String date=LocalDate.now().toString();
+              String comment=request.getParam("comment");
+              if(comment.length()>0)
+              {
+                String ID=request.getParam("ID");
+                JsonObject jsonObject1=new JsonObject().put("ID",ID);
+                JsonObject jsonObject2=new JsonObject().put("$push",new JsonObject().put("info",new JsonObject().put("comment",comment).put("date",date).put("pp",pp).put("name",name)));
+                mongoClient.updateCollection("com",jsonObject1,jsonObject2,res2->
+                {
+                  if(res2.succeeded())
+                  {
+                    JsonObject q1 = new JsonObject().put("ID", ID);
+                    mongoClient.findOne("ans", q1, null, res3 ->
+                    {
+                      if (res3.succeeded() && res3.result() != null)
+                      {
+                        int comCount = res3.result().getInteger("comCount");
+                        comCount++;
+                        JsonObject q2 = new JsonObject().put("$set", new JsonObject().put("comCount", comCount));
+                        mongoClient.updateCollection("ans", q1, q2, res5 ->
+                        {
+                          if (res5.succeeded()) {
+                            response.end("OK");
+                          } else {
+                            response.end("error");
+                          }
+                        });
+                      } else {
+                        response.end("error");
+                      }
+                    });
+                  }
+                  else
+                  {
+                    response.end("error");
+                  }
+
+                });
+
               }
               else
               {
-                response.end("not found");
+                response.end("error");
               }
-              arrayList1.add(1);
-              if(arrayList1.size()==jsonArray.size())
-              {
-                Collections.sort(arrayList, (o1, o2) -> Integer.parseInt(o2.get("like"))-Integer.parseInt(o1.get("like")));
-                if(!response.ended())
-                {
-                  returnQuestionAnswers(response,arrayList,ID);
+            }
+            else
+            {
+              sendErrorMessage(response);
+            }
+          });
+        }
+        else
+        {
+          sendErrorMessage(response);
+        }
+      }
+      else
+      {
+        sendErrorMessage(response);
+      }
+
+    });
+
+
+    ////////////////////////// show comments /////////////////////////
+
+    router.get("/showComments").handler(all->
+    {
+      HttpServerRequest request=all.request();
+      HttpServerResponse response=all.response();
+
+      String ID=request.getParam("ID");
+      JsonObject jsonObject=new JsonObject().put("ID",ID);
+      ArrayList<HashMap<String,String>> arrayList=new ArrayList<>();
+      mongoClient.findOne("com",jsonObject,null,res1->
+      {
+        if (res1.succeeded())
+        {
+          if(res1.result()!=null) {
+            JsonArray jsonArray = res1.result().getJsonArray("info");
+            if (jsonArray != null)
+            {
+              int size = jsonArray.size();
+              int size2 = size;
+              for (int i = 0; i < size; i++) {
+                JsonObject jsonObject1 = jsonArray.getJsonObject(i);
+                String comment = jsonObject1.getString("comment");
+                String name = jsonObject1.getString("name");
+                String pp = jsonObject1.getString("pp");
+                String date = jsonObject1.getString("date");
+
+                HashMap<String, String> hashMap = new HashMap<>();
+                hashMap.put("name", name);
+                hashMap.put("pp", pp);
+                hashMap.put("date", date);
+                hashMap.put("comment", comment);
+                arrayList.add(hashMap);
+                size2--;
+                if (size2 == 0) {
+                  if (!response.ended()) {
+                    Collections.reverse(arrayList);
+                    returnAllComments(response, arrayList);
+                  }
                 }
               }
-            });
+            }
+            else
+            {
+              response.end();
+            }
+          }
+          else
+            {
+            response.end("NO");
           }
         }
         else
         {
-          response.end("not found");
+          response.end("error");
         }
       });
+    });
+
+////////////////////////////////////////////
+    router.get("/answerData").handler(req->
+    {
+      HttpServerRequest request=req.request();
+      HttpServerResponse response=req.response();
+
+      int cookieCount=request.cookieCount();
+      if(cookieCount!=0)
+      {
+        Cookie cookie=request.getCookie("info");
+        if(cookie!=null)
+        {
+          String code=cookie.getValue();
+          JsonObject q1=new JsonObject().put("code",code);
+          mongoClient.findOne("userInfo",q1,null,r1->
+          {
+            if(r1.succeeded())
+            {
+              String regNo=r1.result().getString("regNo");
+
+              String ID=request.getParam("data");
+
+              JsonObject jsonObject=new JsonObject().put("ID",ID);
+
+              ArrayList<HashMap<String,String>> arrayList=new ArrayList<>();
+              mongoClient.findOne("ques",jsonObject,null,res->
+              {
+                if(res.succeeded() && res.result().getJsonArray("answers").size()>0)
+                {
+
+                  int views=res.result().getInteger("views");
+                  views=views+1;
+                  JsonObject jsonObject3=new JsonObject().put("$set",new JsonObject().put("views",views));
+                  mongoClient.updateCollection("ques",jsonObject,jsonObject3,res2-> { });
+                  JsonArray jsonArray=res.result().getJsonArray("answers");
+                  ArrayList<Integer> arrayList1=new ArrayList<>();
+                  for(Object object:jsonArray)
+                  {
+                    String answerID=object.toString();
+                    JsonObject jsonObject1=new JsonObject().put("ID",answerID);
+                    mongoClient.findOne("ans",jsonObject1,null,res1->
+                    {
+                      String name="";
+                      String author="";
+                      String date="";
+                      String like="";
+                      String dislike="";
+                      String pp="";
+                      String comCount="";
+                      if(res1.succeeded())
+                      {
+                        JsonObject jsonObject2=res1.result();
+                        HashMap<String,String> hashMap=new HashMap<>();
+                        name=jsonObject2.getString("name");
+                        author=jsonObject2.getString("author");
+                        date=jsonObject2.getString("date");
+                        like=jsonObject2.getString("like");
+                        dislike=jsonObject2.getString("dislike");
+                        pp=jsonObject2.getString("pp");
+                        comCount=String.valueOf(jsonObject2.getInteger("comCount"));
+
+                        hashMap.put("ID",answerID);
+                        hashMap.put("name",name);
+                        hashMap.put("author",author);
+                        hashMap.put("date",date);
+                        hashMap.put("like",like);
+                        hashMap.put("dislike",dislike);
+                        hashMap.put("pp",pp);
+                        hashMap.put("comCount",comCount);
+                        JsonObject query1=new JsonObject().put("ID",answerID);
+                        mongoClient.findOne("yrating",query1,null,resY->
+                        {
+                          int yrating=0;
+                          if(resY.succeeded() && resY.result()!=null)
+                          {
+                            if(resY.result().containsKey(regNo))
+                            {
+                              yrating=resY.result().getInteger(regNo);
+                            }
+                          }
+                          hashMap.put("yrating",String.valueOf(yrating));
+                          mongoClient.findOne("brating",query1,null,resB->
+                          {
+                            int brating=0;
+                            if(resB.succeeded() && resB.result()!=null)
+                            {
+                              if(resB.result().containsKey(regNo))
+                              {
+                                brating=resB.result().getInteger(regNo);
+                              }
+                            }
+                            hashMap.put("brating",String.valueOf(brating));
+
+                            arrayList.add(hashMap);
+                            arrayList1.add(1);
+                            if(arrayList1.size()==jsonArray.size())
+                            {
+                              Collections.sort(arrayList, (o1, o2) -> Integer.parseInt(o2.get("like"))-Integer.parseInt(o1.get("like")));
+                              if(!response.ended())
+                              {
+                                returnQuestionAnswers(response,arrayList,ID,true);
+                              }
+                            }
+                          });
+                        });
+                      }
+                      else
+                      {
+                        response.end("not found");
+                      }
+                    });
+                  }
+                }
+                else
+                {
+                  response.end("not found");
+                }
+              });
+
+              ////////////// finshed here //////////////
+            }
+            else
+            {
+              sendErrorMessage(response);
+            }
+          });
+        }
+        else
+        {
+          sendErrorMessage(response);
+        }
+      }
+      else
+      {
+        sendErrorMessage(response);
+      }
+
     });
 
 
@@ -476,7 +847,6 @@ public class MainVerticle extends AbstractVerticle
         priorityQueue.add(num00);
         priorityQueue1.add(num00);
       }
-
 
       while (!priorityQueue.isEmpty())
       {
@@ -587,7 +957,8 @@ public class MainVerticle extends AbstractVerticle
                             .put("like",like)
                             .put("dislike",dislike)
                             .put("likeID",likeID)
-                            .put("dislikeID",dislikeID);
+                            .put("dislikeID",dislikeID)
+                            .put("comCount",0);
                           mongoClient.insert("ans",document,res5->
                           {
                             if(res5.succeeded())
@@ -595,11 +966,27 @@ public class MainVerticle extends AbstractVerticle
                               String quesIDFromClient=request.getParam("ID");
                               JsonObject jsonObject5=new JsonObject().put("ID",quesIDFromClient);
                               JsonObject jsonObject7=new JsonObject().put("$push",new JsonObject().put("answers",ansID));
+
                               mongoClient.updateCollection("ques",jsonObject5,jsonObject7,res7->
                               {
                                 if(res7.succeeded())
                                 {
-                                  response.end("OK");
+                                  JsonObject jsonObject9=new JsonObject().put("ID",ansID);
+                                  mongoClient.insert("com",jsonObject9,res9->
+                                  {
+                                    if(res9.succeeded())
+                                    {
+                                      JsonObject forRating=new JsonObject().put("ID",ansID);
+                                      mongoClient.insert("yrating",forRating,resA->{});
+                                      mongoClient.insert("brating",forRating,resB->{});
+                                      mongoClient.insert("com",forRating,resC->{});
+                                      response.end("OK");
+                                    }
+                                    else
+                                    {
+                                      response.end("error");
+                                    }
+                                  });
                                   //JsonObject jsonObject11=new JsonObject().put()
                                 }
                                 else
@@ -637,213 +1024,6 @@ public class MainVerticle extends AbstractVerticle
 
     });
 
-
-    /////////////////////////////  action for like button //////////////////////////////////
-
-    router.get("/like").handler(all->
-    {
-      HttpServerRequest request=all.request();
-      HttpServerResponse response=all.response();
-
-      int count1=request.cookieCount();
-      if(count1>0)
-      {
-        Cookie cookie=request.getCookie("info");
-        if(cookie!=null)
-        {
-          String code=cookie.getValue();
-          JsonObject jsonObject=new JsonObject().put("code",code);
-          mongoClient.findOne("userInfo",jsonObject,null,res1->
-          {
-            if(res1.succeeded())
-            {
-              if(res1.result()!=null)
-              {
-                String regNo=res1.result().getString("regNo");
-                String ansID=request.getParam("ansID");
-                JsonObject jsonObject1=new JsonObject().put("ID",ansID);
-                mongoClient.findOne("ans",jsonObject1,null,res2->
-                {
-                  if(res2.succeeded())
-                  {
-                    if(res2.result()!=null)
-                    {
-                      String like=res2.result().getString("like");
-                      int likes=Integer.parseInt(like);
-                      JsonArray jsonArray=res2.result().getJsonArray("likeID");
-                      HashSet<String> hashSet=new HashSet<>();
-                      for(Object jsonObject2:jsonArray)
-                      {
-                        hashSet.add(jsonObject2.toString());
-                      }
-                      if(hashSet.contains(regNo))
-                      {
-                        response.end("not eligible");
-                      }
-                      else
-                      {
-                        String newLike=String.valueOf(likes+1);
-                        JsonObject jsonObject3=new JsonObject().put("$set",new JsonObject().put("like",newLike));
-                        mongoClient.updateCollection("ans",jsonObject1,jsonObject3,res3->
-                        {
-                          if(res3.succeeded())
-                          {
-                            JsonObject jsonObject5=new JsonObject().put("$push",new JsonObject().put("likeID",regNo));
-                            mongoClient.updateCollection("ans",jsonObject1,jsonObject5,res5->
-                            {
-                              if(res5.succeeded())
-                              {
-                                response.end("OK");
-                              }
-                              else
-                              {
-                                response.end("error");
-                              }
-                            });
-                          }
-                          else
-                          {
-                            response.end("error");
-                          }
-                        });
-                      }
-                    }
-                    else
-                    {
-                      response.end("error");
-                    }
-                  }
-                  else
-                  {
-                    response.end("error");
-                  }
-                });
-              }
-              else
-              {
-                sendErrorMessage(response);
-              }
-            }
-            else
-            {
-              sendErrorMessage(response);
-            }
-          });
-        }
-        else
-        {
-          sendErrorMessage(response);
-        }
-      }
-      else
-      {
-        sendErrorMessage(response);
-      }
-    });
-
-
-    ///////////////////////////// for handling dislike action /////////////////////////////
-
-    router.get("/dislike").handler(all->{
-
-      HttpServerRequest request=all.request();
-      HttpServerResponse response=all.response();
-
-      int count1=request.cookieCount();
-      if(count1>0)
-      {
-        Cookie cookie=request.getCookie("info");
-        if(cookie!=null)
-        {
-          String code=cookie.getValue();
-          JsonObject jsonObject=new JsonObject().put("code",code);
-          mongoClient.findOne("userInfo",jsonObject,null,res1->
-          {
-            if(res1.succeeded())
-            {
-              if(res1.result()!=null)
-              {
-                String resgNo=res1.result().getString("regNo");
-                String ID=request.getParam("ansID");
-                JsonObject jsonObject1=new JsonObject().put("ID",ID);
-                mongoClient.findOne("ans",jsonObject1,null,res2->
-                {
-                  if(res2.succeeded())
-                  {
-                    if(res2.result()!=null)
-                    {
-                      String dislike=res2.result().getString("dislike");
-                      JsonArray jsonArray=res2.result().getJsonArray("dislikeID");
-                      HashSet<String> hashSet=new HashSet<>();
-                      for(Object object:jsonArray)
-                      {
-                        hashSet.add(object.toString());
-                      }
-                      if(hashSet.contains(resgNo))
-                      {
-                        response.end("not eligible");
-                      }
-                      else
-                      {
-                        JsonObject jsonObject2=new JsonObject().put("ID",ID);
-                        JsonObject jsonObject3=new JsonObject().put("$push",new JsonObject().put("dislikeID",resgNo));
-                        mongoClient.updateCollection("ans",jsonObject2,jsonObject3,res3->{
-                          if(res3.succeeded())
-                          {
-                            int dislikes=Integer.parseInt(dislike);
-                            dislikes++;
-                            JsonObject jsonObject5=new JsonObject().put("$set",new JsonObject().put("dislike",String.valueOf(dislikes)));
-                            mongoClient.updateCollection("ans",jsonObject2,jsonObject5,res5->
-                            {
-                              if(res5.succeeded())
-                              {
-                                response.end("OK");
-                              }
-                              else
-                              {
-                                response.end("error");
-                              }
-                            });
-                          }
-                          else
-                          {
-                            response.end("error");
-                          }
-                        });
-                      }
-                    }
-                    else
-                    {
-                      response.end("error");
-                    }
-                  }
-                  else
-                  {
-                    response.end("error");
-                  }
-                });
-              }
-              else
-              {
-                sendErrorMessage(response);
-              }
-            }
-            else
-            {
-              sendErrorMessage(response);
-            }
-          });
-        }
-        else
-        {
-          sendErrorMessage(response);
-        }
-      }
-      else
-      {
-        sendErrorMessage(response);
-      }
-    });
     ///////////////////////////// new question editor /////////////////////////////////////
 
     router.get("/newQuesEdit").handler(req->{
@@ -967,7 +1147,60 @@ public class MainVerticle extends AbstractVerticle
     });
 
 
+    ///////////////////////////// for handling the recent questions and most viewed questions //////////////////////////////
+
+    router.get("/showQuestions").handler(all->
+    {
+      HttpServerRequest request=all.request();
+      HttpServerResponse response=all.response();
+
+      String type=request.getParam("type");
+      FindOptions findOptions=new FindOptions();
+      JsonObject qA=new JsonObject();
+      if(type.equals("recent"))
+      {
+        qA.put("ID",-1);
+      }
+      else
+      {
+        qA.put("views",-1);
+      }
+      findOptions.setSort(qA);
+      findOptions.setLimit(10);
+      JsonObject noUse=new JsonObject();
+
+      mongoClient.findWithOptions("ques",noUse,findOptions,resA->
+      {
+        if(resA.succeeded())
+        {
+          ArrayList<HashMap<String,String>> arrayList=new ArrayList<>();
+          for(JsonObject jsonObject1:resA.result())
+          {
+            String name = jsonObject1.getString("name");
+            String date=jsonObject1.getString("date");
+            String views=jsonObject1.getInteger("views").toString();
+            String author=jsonObject1.getString("author");
+            String ID=jsonObject1.getString("ID");
+            HashMap<String,String> hm=new HashMap<>();
+            hm.put("name",name);
+            hm.put("ID",ID);
+            hm.put("buttonID","A"+ID);
+            hm.put("date",date);
+            hm.put("views",views);
+            hm.put("author",author);
+            arrayList.add(hm);
+          }
+          returnSearchData(response,arrayList);
+        }
+        else
+        {
+          response.end("error");
+        }
+      });
+    });
+
   }
+
 
 
 
@@ -1005,7 +1238,7 @@ public class MainVerticle extends AbstractVerticle
   }
   //////////////////////////////////////////////////////////////////////////////////
 
-  private void returnQuestionAnswers(HttpServerResponse response,ArrayList<HashMap<String,String>> arrayList,String ID)
+  private void returnQuestionAnswers(HttpServerResponse response,ArrayList<HashMap<String,String>> arrayList,String ID,boolean bool1)
   {
     HashMap<String,Object> hashMap=new HashMap<>();
     hashMap.put("ans",arrayList);
@@ -1020,7 +1253,14 @@ public class MainVerticle extends AbstractVerticle
     }
     try
     {
-      template2.process(hashMap,fileWriter);
+      if(bool1)
+      {
+        template2.process(hashMap,fileWriter);
+      }
+      else
+      {
+        template11.process(hashMap,fileWriter);
+      }
     } catch (TemplateException e)
     {
       e.printStackTrace();
@@ -1108,6 +1348,58 @@ public class MainVerticle extends AbstractVerticle
       e.printStackTrace();
     }
     response.sendFile("src/pages/newQuesEditor.html");
-    response.end();
   }
+
+  private void returnNewCommentEditPage(HttpServerResponse response,HashMap<String,String> hashMap)
+  {
+    Writer fileWriter= null;
+    try
+    {
+      fileWriter = new FileWriter(new File("src/pages/commentPage.html"));
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+    try
+    {
+      template9.process(hashMap,fileWriter);
+    } catch (TemplateException e)
+    {
+      e.printStackTrace();
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+    response.sendFile("src/pages/commentPage.html");
+  }
+
+  private void returnAllComments(HttpServerResponse response,ArrayList<HashMap<String,String>> arrayList)
+  {
+    Writer fileWriter= null;
+    HashMap<String,ArrayList<HashMap<String,String>>> hashMap=new HashMap<>();
+    hashMap.put("comments",arrayList);
+    try
+    {
+      fileWriter = new FileWriter(new File("src/pages/allCommentsPage.html"));
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+    try
+    {
+      template10.process(hashMap,fileWriter);
+    } catch (TemplateException e)
+    {
+      e.printStackTrace();
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+    response.sendFile("src/pages/allCommentsPage.html");
+  }
+
 }

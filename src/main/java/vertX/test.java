@@ -3,6 +3,7 @@ package vertX;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import io.vertx.core.json.JsonObject;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -35,6 +36,40 @@ class hello
     template.process(hashMap,fileWriter);
 
      */
+/*
+    mongoClient.find("ans",jsonObject,res1 ->
+    {
+      if(res1.succeeded())
+      {
+        for(JsonObject jsonObject1:res1.result())
+        {
+          String ID=jsonObject1.getString("ID");
+          JsonObject jsonObject2=new JsonObject().put("ID",ID).put("yrating",new JsonObject().put("0000",3));
+          mongoClient.find("rating",jsonObject2,res2->
+          {
+            if(res2.succeeded())
+            {
+              System.out.println(res2.result());
+            }
+          });
+        }
+      }
+
+      for(JsonObject jsonObject1:res1.result())
+        {
+          String ID=jsonObject1.getString("ID");
+          JsonObject jsonObject2=new JsonObject().put("ID",ID).put("yrating.regNo","00000");
+          mongoClient.findOne("rating",jsonObject2,null,res3->
+          {
+            if(res3.succeeded())
+            {
+              System.out.println(res3.result().getJsonArray("yrating").getJsonObject(0).getInteger("rating"));
+            }
+          });
+        }
+    });
+
+ */
 
     System.out.println(LocalDate.now());
 
