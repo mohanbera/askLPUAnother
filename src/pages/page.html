@@ -1,526 +1,4 @@
 <div class="ui divider"></div>
-  <div id="div10003" style="position: relative; display: inline-block; width: 97%; background-color: white; box-shadow: 4px 4px 2px 0px rgba(0,0,0,0.35)" class='ui label'>
-    <div style="float: left">
-      <div class="ui purple horizontal label">Question</div>
-      <div class="ui large label">Where is 37 block in LPU</div>
-    </div>
-    <div style="position:relative; float: right;">
-      <a id=A10003 class="ui blue basic label">See Answers</a>
-      <a class="ui pointing red basic label">By Koustav Manna</a>
-      <a class="ui teal tag label">573</a>
-      <a class="ui orange label">
-        <i class="calendar alternate outline icon"></i>2019-07-07</a>
-      <button hidden id="edit10003" style=" float: bottom; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);" class="circular ui green icon button">
-        <i class="icon pencil alternate"></i>
-      </button>
-      <script>
-        var bool10003=false;
-
-        $(function(){
-
-
-            $("#A10003").click(function ()
-            {
-              if(bool10003===false)
-              {
-                $("#edit10003").visible=true;
-                $("#edit10003").show();
-                bool10003 = true;
-                $("#div10003").append("<br>");
-                $.ajax({
-
-                  url: "/answerData",
-
-                  data:
-                    {
-                      data:10003,
-                      count:"1",
-                    },
-                  success: function(data)
-                  {
-                    if(data!=='not found')
-                    {
-                      $("#answerList10003").empty();
-                      $("#answerList10003").append(data);
-                    }
-                  }
-                });
-              }
-            });
-
-          var count1=0;
-          $("#edit10003").click(function () {
-            if (count1 === 0) {
-            count1=count1+1;
-              $.ajax({
-
-                url: "/editAnswer",
-
-                data:
-                  {
-                    data: 10003,
-                  },
-                success: function(data)
-                {
-                  if(data!=="login error")
-                  {
-                    $("#answerList10003").append(data);
-                  }
-                  else
-                  {
-                    location.reload();
-                  }
-                }
-              });
-          }
-          });
-
-
-        });
-
-      </script>
-
-    </div>
-    <br>
-    <div class="ui divider"></div>
-    <div id="answerList10003"></div>
-  </div>
-  <div class="ui divider"></div>
-  <div id="div10015" style="position: relative; display: inline-block; width: 97%; background-color: white; box-shadow: 4px 4px 2px 0px rgba(0,0,0,0.35)" class='ui label'>
-    <div style="float: left">
-      <div class="ui purple horizontal label">Question</div>
-      <div class="ui large label">Where to go for any payment issue in LPU?</div>
-    </div>
-    <div style="position:relative; float: right;">
-      <a id=A10015 class="ui blue basic label">See Answers</a>
-      <a class="ui pointing red basic label">By Mohan Bera</a>
-      <a class="ui teal tag label">61</a>
-      <a class="ui orange label">
-        <i class="calendar alternate outline icon"></i>2019-09-29</a>
-      <button hidden id="edit10015" style=" float: bottom; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);" class="circular ui green icon button">
-        <i class="icon pencil alternate"></i>
-      </button>
-      <script>
-        var bool10015=false;
-
-        $(function(){
-
-
-            $("#A10015").click(function ()
-            {
-              if(bool10015===false)
-              {
-                $("#edit10015").visible=true;
-                $("#edit10015").show();
-                bool10015 = true;
-                $("#div10015").append("<br>");
-                $.ajax({
-
-                  url: "/answerData",
-
-                  data:
-                    {
-                      data:10015,
-                      count:"1",
-                    },
-                  success: function(data)
-                  {
-                    if(data!=='not found')
-                    {
-                      $("#answerList10015").empty();
-                      $("#answerList10015").append(data);
-                    }
-                  }
-                });
-              }
-            });
-
-          var count1=0;
-          $("#edit10015").click(function () {
-            if (count1 === 0) {
-            count1=count1+1;
-              $.ajax({
-
-                url: "/editAnswer",
-
-                data:
-                  {
-                    data: 10015,
-                  },
-                success: function(data)
-                {
-                  if(data!=="login error")
-                  {
-                    $("#answerList10015").append(data);
-                  }
-                  else
-                  {
-                    location.reload();
-                  }
-                }
-              });
-          }
-          });
-
-
-        });
-
-      </script>
-
-    </div>
-    <br>
-    <div class="ui divider"></div>
-    <div id="answerList10015"></div>
-  </div>
-  <div class="ui divider"></div>
-  <div id="div10014" style="position: relative; display: inline-block; width: 97%; background-color: white; box-shadow: 4px 4px 2px 0px rgba(0,0,0,0.35)" class='ui label'>
-    <div style="float: left">
-      <div class="ui purple horizontal label">Question</div>
-      <div class="ui large label">What is the total number of students in LPU?</div>
-    </div>
-    <div style="position:relative; float: right;">
-      <a id=A10014 class="ui blue basic label">See Answers</a>
-      <a class="ui pointing red basic label">By Mohan Bera</a>
-      <a class="ui teal tag label">72</a>
-      <a class="ui orange label">
-        <i class="calendar alternate outline icon"></i>2019-09-29</a>
-      <button hidden id="edit10014" style=" float: bottom; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);" class="circular ui green icon button">
-        <i class="icon pencil alternate"></i>
-      </button>
-      <script>
-        var bool10014=false;
-
-        $(function(){
-
-
-            $("#A10014").click(function ()
-            {
-              if(bool10014===false)
-              {
-                $("#edit10014").visible=true;
-                $("#edit10014").show();
-                bool10014 = true;
-                $("#div10014").append("<br>");
-                $.ajax({
-
-                  url: "/answerData",
-
-                  data:
-                    {
-                      data:10014,
-                      count:"1",
-                    },
-                  success: function(data)
-                  {
-                    if(data!=='not found')
-                    {
-                      $("#answerList10014").empty();
-                      $("#answerList10014").append(data);
-                    }
-                  }
-                });
-              }
-            });
-
-          var count1=0;
-          $("#edit10014").click(function () {
-            if (count1 === 0) {
-            count1=count1+1;
-              $.ajax({
-
-                url: "/editAnswer",
-
-                data:
-                  {
-                    data: 10014,
-                  },
-                success: function(data)
-                {
-                  if(data!=="login error")
-                  {
-                    $("#answerList10014").append(data);
-                  }
-                  else
-                  {
-                    location.reload();
-                  }
-                }
-              });
-          }
-          });
-
-
-        });
-
-      </script>
-
-    </div>
-    <br>
-    <div class="ui divider"></div>
-    <div id="answerList10014"></div>
-  </div>
-  <div class="ui divider"></div>
-  <div id="div10029" style="position: relative; display: inline-block; width: 97%; background-color: white; box-shadow: 4px 4px 2px 0px rgba(0,0,0,0.35)" class='ui label'>
-    <div style="float: left">
-      <div class="ui purple horizontal label">Question</div>
-      <div class="ui large label">where is BH 3 in LPU?</div>
-    </div>
-    <div style="position:relative; float: right;">
-      <a id=A10029 class="ui blue basic label">See Answers</a>
-      <a class="ui pointing red basic label">By Mohan Bera</a>
-      <a class="ui teal tag label">67</a>
-      <a class="ui orange label">
-        <i class="calendar alternate outline icon"></i>2019-09-29</a>
-      <button hidden id="edit10029" style=" float: bottom; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);" class="circular ui green icon button">
-        <i class="icon pencil alternate"></i>
-      </button>
-      <script>
-        var bool10029=false;
-
-        $(function(){
-
-
-            $("#A10029").click(function ()
-            {
-              if(bool10029===false)
-              {
-                $("#edit10029").visible=true;
-                $("#edit10029").show();
-                bool10029 = true;
-                $("#div10029").append("<br>");
-                $.ajax({
-
-                  url: "/answerData",
-
-                  data:
-                    {
-                      data:10029,
-                      count:"1",
-                    },
-                  success: function(data)
-                  {
-                    if(data!=='not found')
-                    {
-                      $("#answerList10029").empty();
-                      $("#answerList10029").append(data);
-                    }
-                  }
-                });
-              }
-            });
-
-          var count1=0;
-          $("#edit10029").click(function () {
-            if (count1 === 0) {
-            count1=count1+1;
-              $.ajax({
-
-                url: "/editAnswer",
-
-                data:
-                  {
-                    data: 10029,
-                  },
-                success: function(data)
-                {
-                  if(data!=="login error")
-                  {
-                    $("#answerList10029").append(data);
-                  }
-                  else
-                  {
-                    location.reload();
-                  }
-                }
-              });
-          }
-          });
-
-
-        });
-
-      </script>
-
-    </div>
-    <br>
-    <div class="ui divider"></div>
-    <div id="answerList10029"></div>
-  </div>
-  <div class="ui divider"></div>
-  <div id="div10013" style="position: relative; display: inline-block; width: 97%; background-color: white; box-shadow: 4px 4px 2px 0px rgba(0,0,0,0.35)" class='ui label'>
-    <div style="float: left">
-      <div class="ui purple horizontal label">Question</div>
-      <div class="ui large label">What is the password for LPU wireless?</div>
-    </div>
-    <div style="position:relative; float: right;">
-      <a id=A10013 class="ui blue basic label">See Answers</a>
-      <a class="ui pointing red basic label">By Mohan Bera</a>
-      <a class="ui teal tag label">50</a>
-      <a class="ui orange label">
-        <i class="calendar alternate outline icon"></i>2019-09-29</a>
-      <button hidden id="edit10013" style=" float: bottom; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);" class="circular ui green icon button">
-        <i class="icon pencil alternate"></i>
-      </button>
-      <script>
-        var bool10013=false;
-
-        $(function(){
-
-
-            $("#A10013").click(function ()
-            {
-              if(bool10013===false)
-              {
-                $("#edit10013").visible=true;
-                $("#edit10013").show();
-                bool10013 = true;
-                $("#div10013").append("<br>");
-                $.ajax({
-
-                  url: "/answerData",
-
-                  data:
-                    {
-                      data:10013,
-                      count:"1",
-                    },
-                  success: function(data)
-                  {
-                    if(data!=='not found')
-                    {
-                      $("#answerList10013").empty();
-                      $("#answerList10013").append(data);
-                    }
-                  }
-                });
-              }
-            });
-
-          var count1=0;
-          $("#edit10013").click(function () {
-            if (count1 === 0) {
-            count1=count1+1;
-              $.ajax({
-
-                url: "/editAnswer",
-
-                data:
-                  {
-                    data: 10013,
-                  },
-                success: function(data)
-                {
-                  if(data!=="login error")
-                  {
-                    $("#answerList10013").append(data);
-                  }
-                  else
-                  {
-                    location.reload();
-                  }
-                }
-              });
-          }
-          });
-
-
-        });
-
-      </script>
-
-    </div>
-    <br>
-    <div class="ui divider"></div>
-    <div id="answerList10013"></div>
-  </div>
-  <div class="ui divider"></div>
-  <div id="div10012" style="position: relative; display: inline-block; width: 97%; background-color: white; box-shadow: 4px 4px 2px 0px rgba(0,0,0,0.35)" class='ui label'>
-    <div style="float: left">
-      <div class="ui purple horizontal label">Question</div>
-      <div class="ui large label">Where is the Unimall inside LPU?</div>
-    </div>
-    <div style="position:relative; float: right;">
-      <a id=A10012 class="ui blue basic label">See Answers</a>
-      <a class="ui pointing red basic label">By Mohan Bera</a>
-      <a class="ui teal tag label">57</a>
-      <a class="ui orange label">
-        <i class="calendar alternate outline icon"></i>2019-09-29</a>
-      <button hidden id="edit10012" style=" float: bottom; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);" class="circular ui green icon button">
-        <i class="icon pencil alternate"></i>
-      </button>
-      <script>
-        var bool10012=false;
-
-        $(function(){
-
-
-            $("#A10012").click(function ()
-            {
-              if(bool10012===false)
-              {
-                $("#edit10012").visible=true;
-                $("#edit10012").show();
-                bool10012 = true;
-                $("#div10012").append("<br>");
-                $.ajax({
-
-                  url: "/answerData",
-
-                  data:
-                    {
-                      data:10012,
-                      count:"1",
-                    },
-                  success: function(data)
-                  {
-                    if(data!=='not found')
-                    {
-                      $("#answerList10012").empty();
-                      $("#answerList10012").append(data);
-                    }
-                  }
-                });
-              }
-            });
-
-          var count1=0;
-          $("#edit10012").click(function () {
-            if (count1 === 0) {
-            count1=count1+1;
-              $.ajax({
-
-                url: "/editAnswer",
-
-                data:
-                  {
-                    data: 10012,
-                  },
-                success: function(data)
-                {
-                  if(data!=="login error")
-                  {
-                    $("#answerList10012").append(data);
-                  }
-                  else
-                  {
-                    location.reload();
-                  }
-                }
-              });
-          }
-          });
-
-
-        });
-
-      </script>
-
-    </div>
-    <br>
-    <div class="ui divider"></div>
-    <div id="answerList10012"></div>
-  </div>
-  <div class="ui divider"></div>
   <div id="div10040" style="position: relative; display: inline-block; width: 97%; background-color: white; box-shadow: 4px 4px 2px 0px rgba(0,0,0,0.35)" class='ui label'>
     <div style="float: left">
       <div class="ui purple horizontal label">Question</div>
@@ -529,7 +7,7 @@
     <div style="position:relative; float: right;">
       <a id=A10040 class="ui blue basic label">See Answers</a>
       <a class="ui pointing red basic label">By Mohan Bera</a>
-      <a class="ui teal tag label">4</a>
+      <a class="ui teal tag label">14</a>
       <a class="ui orange label">
         <i class="calendar alternate outline icon"></i>2019-10-07</a>
       <button hidden id="edit10040" style=" float: bottom; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);" class="circular ui green icon button">
@@ -608,49 +86,49 @@
     <div id="answerList10040"></div>
   </div>
   <div class="ui divider"></div>
-  <div id="div10011" style="position: relative; display: inline-block; width: 97%; background-color: white; box-shadow: 4px 4px 2px 0px rgba(0,0,0,0.35)" class='ui label'>
+  <div id="div10039" style="position: relative; display: inline-block; width: 97%; background-color: white; box-shadow: 4px 4px 2px 0px rgba(0,0,0,0.35)" class='ui label'>
     <div style="float: left">
       <div class="ui purple horizontal label">Question</div>
-      <div class="ui large label">What is the total number of boys hostel in LPU?</div>
+      <div class="ui large label">What can be some examples of nodeJs project for my capstone?</div>
     </div>
     <div style="position:relative; float: right;">
-      <a id=A10011 class="ui blue basic label">See Answers</a>
+      <a id=A10039 class="ui blue basic label">See Answers</a>
       <a class="ui pointing red basic label">By Mohan Bera</a>
-      <a class="ui teal tag label">37</a>
+      <a class="ui teal tag label">8</a>
       <a class="ui orange label">
-        <i class="calendar alternate outline icon"></i>2019-09-29</a>
-      <button hidden id="edit10011" style=" float: bottom; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);" class="circular ui green icon button">
+        <i class="calendar alternate outline icon"></i>2019-10-04</a>
+      <button hidden id="edit10039" style=" float: bottom; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);" class="circular ui green icon button">
         <i class="icon pencil alternate"></i>
       </button>
       <script>
-        var bool10011=false;
+        var bool10039=false;
 
         $(function(){
 
 
-            $("#A10011").click(function ()
+            $("#A10039").click(function ()
             {
-              if(bool10011===false)
+              if(bool10039===false)
               {
-                $("#edit10011").visible=true;
-                $("#edit10011").show();
-                bool10011 = true;
-                $("#div10011").append("<br>");
+                $("#edit10039").visible=true;
+                $("#edit10039").show();
+                bool10039 = true;
+                $("#div10039").append("<br>");
                 $.ajax({
 
                   url: "/answerData",
 
                   data:
                     {
-                      data:10011,
+                      data:10039,
                       count:"1",
                     },
                   success: function(data)
                   {
                     if(data!=='not found')
                     {
-                      $("#answerList10011").empty();
-                      $("#answerList10011").append(data);
+                      $("#answerList10039").empty();
+                      $("#answerList10039").append(data);
                     }
                   }
                 });
@@ -658,7 +136,7 @@
             });
 
           var count1=0;
-          $("#edit10011").click(function () {
+          $("#edit10039").click(function () {
             if (count1 === 0) {
             count1=count1+1;
               $.ajax({
@@ -667,13 +145,13 @@
 
                 data:
                   {
-                    data: 10011,
+                    data: 10039,
                   },
                 success: function(data)
                 {
                   if(data!=="login error")
                   {
-                    $("#answerList10011").append(data);
+                    $("#answerList10039").append(data);
                   }
                   else
                   {
@@ -692,7 +170,703 @@
     </div>
     <br>
     <div class="ui divider"></div>
-    <div id="answerList10011"></div>
+    <div id="answerList10039"></div>
+  </div>
+  <div class="ui divider"></div>
+  <div id="div10038" style="position: relative; display: inline-block; width: 97%; background-color: white; box-shadow: 4px 4px 2px 0px rgba(0,0,0,0.35)" class='ui label'>
+    <div style="float: left">
+      <div class="ui purple horizontal label">Question</div>
+      <div class="ui large label">Where is placement office?</div>
+    </div>
+    <div style="position:relative; float: right;">
+      <a id=A10038 class="ui blue basic label">See Answers</a>
+      <a class="ui pointing red basic label">By Mohan Bera</a>
+      <a class="ui teal tag label">5</a>
+      <a class="ui orange label">
+        <i class="calendar alternate outline icon"></i>2019-10-01</a>
+      <button hidden id="edit10038" style=" float: bottom; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);" class="circular ui green icon button">
+        <i class="icon pencil alternate"></i>
+      </button>
+      <script>
+        var bool10038=false;
+
+        $(function(){
+
+
+            $("#A10038").click(function ()
+            {
+              if(bool10038===false)
+              {
+                $("#edit10038").visible=true;
+                $("#edit10038").show();
+                bool10038 = true;
+                $("#div10038").append("<br>");
+                $.ajax({
+
+                  url: "/answerData",
+
+                  data:
+                    {
+                      data:10038,
+                      count:"1",
+                    },
+                  success: function(data)
+                  {
+                    if(data!=='not found')
+                    {
+                      $("#answerList10038").empty();
+                      $("#answerList10038").append(data);
+                    }
+                  }
+                });
+              }
+            });
+
+          var count1=0;
+          $("#edit10038").click(function () {
+            if (count1 === 0) {
+            count1=count1+1;
+              $.ajax({
+
+                url: "/editAnswer",
+
+                data:
+                  {
+                    data: 10038,
+                  },
+                success: function(data)
+                {
+                  if(data!=="login error")
+                  {
+                    $("#answerList10038").append(data);
+                  }
+                  else
+                  {
+                    location.reload();
+                  }
+                }
+              });
+          }
+          });
+
+
+        });
+
+      </script>
+
+    </div>
+    <br>
+    <div class="ui divider"></div>
+    <div id="answerList10038"></div>
+  </div>
+  <div class="ui divider"></div>
+  <div id="div10037" style="position: relative; display: inline-block; width: 97%; background-color: white; box-shadow: 4px 4px 2px 0px rgba(0,0,0,0.35)" class='ui label'>
+    <div style="float: left">
+      <div class="ui purple horizontal label">Question</div>
+      <div class="ui large label">Question->16.</div>
+    </div>
+    <div style="position:relative; float: right;">
+      <a id=A10037 class="ui blue basic label">See Answers</a>
+      <a class="ui pointing red basic label">By Mohan Bera</a>
+      <a class="ui teal tag label">4</a>
+      <a class="ui orange label">
+        <i class="calendar alternate outline icon"></i>2019-09-30</a>
+      <button hidden id="edit10037" style=" float: bottom; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);" class="circular ui green icon button">
+        <i class="icon pencil alternate"></i>
+      </button>
+      <script>
+        var bool10037=false;
+
+        $(function(){
+
+
+            $("#A10037").click(function ()
+            {
+              if(bool10037===false)
+              {
+                $("#edit10037").visible=true;
+                $("#edit10037").show();
+                bool10037 = true;
+                $("#div10037").append("<br>");
+                $.ajax({
+
+                  url: "/answerData",
+
+                  data:
+                    {
+                      data:10037,
+                      count:"1",
+                    },
+                  success: function(data)
+                  {
+                    if(data!=='not found')
+                    {
+                      $("#answerList10037").empty();
+                      $("#answerList10037").append(data);
+                    }
+                  }
+                });
+              }
+            });
+
+          var count1=0;
+          $("#edit10037").click(function () {
+            if (count1 === 0) {
+            count1=count1+1;
+              $.ajax({
+
+                url: "/editAnswer",
+
+                data:
+                  {
+                    data: 10037,
+                  },
+                success: function(data)
+                {
+                  if(data!=="login error")
+                  {
+                    $("#answerList10037").append(data);
+                  }
+                  else
+                  {
+                    location.reload();
+                  }
+                }
+              });
+          }
+          });
+
+
+        });
+
+      </script>
+
+    </div>
+    <br>
+    <div class="ui divider"></div>
+    <div id="answerList10037"></div>
+  </div>
+  <div class="ui divider"></div>
+  <div id="div10036" style="position: relative; display: inline-block; width: 97%; background-color: white; box-shadow: 4px 4px 2px 0px rgba(0,0,0,0.35)" class='ui label'>
+    <div style="float: left">
+      <div class="ui purple horizontal label">Question</div>
+      <div class="ui large label">Question->15.</div>
+    </div>
+    <div style="position:relative; float: right;">
+      <a id=A10036 class="ui blue basic label">See Answers</a>
+      <a class="ui pointing red basic label">By Mohan Bera</a>
+      <a class="ui teal tag label">4</a>
+      <a class="ui orange label">
+        <i class="calendar alternate outline icon"></i>2019-09-30</a>
+      <button hidden id="edit10036" style=" float: bottom; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);" class="circular ui green icon button">
+        <i class="icon pencil alternate"></i>
+      </button>
+      <script>
+        var bool10036=false;
+
+        $(function(){
+
+
+            $("#A10036").click(function ()
+            {
+              if(bool10036===false)
+              {
+                $("#edit10036").visible=true;
+                $("#edit10036").show();
+                bool10036 = true;
+                $("#div10036").append("<br>");
+                $.ajax({
+
+                  url: "/answerData",
+
+                  data:
+                    {
+                      data:10036,
+                      count:"1",
+                    },
+                  success: function(data)
+                  {
+                    if(data!=='not found')
+                    {
+                      $("#answerList10036").empty();
+                      $("#answerList10036").append(data);
+                    }
+                  }
+                });
+              }
+            });
+
+          var count1=0;
+          $("#edit10036").click(function () {
+            if (count1 === 0) {
+            count1=count1+1;
+              $.ajax({
+
+                url: "/editAnswer",
+
+                data:
+                  {
+                    data: 10036,
+                  },
+                success: function(data)
+                {
+                  if(data!=="login error")
+                  {
+                    $("#answerList10036").append(data);
+                  }
+                  else
+                  {
+                    location.reload();
+                  }
+                }
+              });
+          }
+          });
+
+
+        });
+
+      </script>
+
+    </div>
+    <br>
+    <div class="ui divider"></div>
+    <div id="answerList10036"></div>
+  </div>
+  <div class="ui divider"></div>
+  <div id="div10035" style="position: relative; display: inline-block; width: 97%; background-color: white; box-shadow: 4px 4px 2px 0px rgba(0,0,0,0.35)" class='ui label'>
+    <div style="float: left">
+      <div class="ui purple horizontal label">Question</div>
+      <div class="ui large label">Question->12.</div>
+    </div>
+    <div style="position:relative; float: right;">
+      <a id=A10035 class="ui blue basic label">See Answers</a>
+      <a class="ui pointing red basic label">By Mohan Bera</a>
+      <a class="ui teal tag label">3</a>
+      <a class="ui orange label">
+        <i class="calendar alternate outline icon"></i>2019-09-30</a>
+      <button hidden id="edit10035" style=" float: bottom; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);" class="circular ui green icon button">
+        <i class="icon pencil alternate"></i>
+      </button>
+      <script>
+        var bool10035=false;
+
+        $(function(){
+
+
+            $("#A10035").click(function ()
+            {
+              if(bool10035===false)
+              {
+                $("#edit10035").visible=true;
+                $("#edit10035").show();
+                bool10035 = true;
+                $("#div10035").append("<br>");
+                $.ajax({
+
+                  url: "/answerData",
+
+                  data:
+                    {
+                      data:10035,
+                      count:"1",
+                    },
+                  success: function(data)
+                  {
+                    if(data!=='not found')
+                    {
+                      $("#answerList10035").empty();
+                      $("#answerList10035").append(data);
+                    }
+                  }
+                });
+              }
+            });
+
+          var count1=0;
+          $("#edit10035").click(function () {
+            if (count1 === 0) {
+            count1=count1+1;
+              $.ajax({
+
+                url: "/editAnswer",
+
+                data:
+                  {
+                    data: 10035,
+                  },
+                success: function(data)
+                {
+                  if(data!=="login error")
+                  {
+                    $("#answerList10035").append(data);
+                  }
+                  else
+                  {
+                    location.reload();
+                  }
+                }
+              });
+          }
+          });
+
+
+        });
+
+      </script>
+
+    </div>
+    <br>
+    <div class="ui divider"></div>
+    <div id="answerList10035"></div>
+  </div>
+  <div class="ui divider"></div>
+  <div id="div10034" style="position: relative; display: inline-block; width: 97%; background-color: white; box-shadow: 4px 4px 2px 0px rgba(0,0,0,0.35)" class='ui label'>
+    <div style="float: left">
+      <div class="ui purple horizontal label">Question</div>
+      <div class="ui large label">Question->12.</div>
+    </div>
+    <div style="position:relative; float: right;">
+      <a id=A10034 class="ui blue basic label">See Answers</a>
+      <a class="ui pointing red basic label">By Mohan Bera</a>
+      <a class="ui teal tag label">2</a>
+      <a class="ui orange label">
+        <i class="calendar alternate outline icon"></i>2019-09-30</a>
+      <button hidden id="edit10034" style=" float: bottom; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);" class="circular ui green icon button">
+        <i class="icon pencil alternate"></i>
+      </button>
+      <script>
+        var bool10034=false;
+
+        $(function(){
+
+
+            $("#A10034").click(function ()
+            {
+              if(bool10034===false)
+              {
+                $("#edit10034").visible=true;
+                $("#edit10034").show();
+                bool10034 = true;
+                $("#div10034").append("<br>");
+                $.ajax({
+
+                  url: "/answerData",
+
+                  data:
+                    {
+                      data:10034,
+                      count:"1",
+                    },
+                  success: function(data)
+                  {
+                    if(data!=='not found')
+                    {
+                      $("#answerList10034").empty();
+                      $("#answerList10034").append(data);
+                    }
+                  }
+                });
+              }
+            });
+
+          var count1=0;
+          $("#edit10034").click(function () {
+            if (count1 === 0) {
+            count1=count1+1;
+              $.ajax({
+
+                url: "/editAnswer",
+
+                data:
+                  {
+                    data: 10034,
+                  },
+                success: function(data)
+                {
+                  if(data!=="login error")
+                  {
+                    $("#answerList10034").append(data);
+                  }
+                  else
+                  {
+                    location.reload();
+                  }
+                }
+              });
+          }
+          });
+
+
+        });
+
+      </script>
+
+    </div>
+    <br>
+    <div class="ui divider"></div>
+    <div id="answerList10034"></div>
+  </div>
+  <div class="ui divider"></div>
+  <div id="div10033" style="position: relative; display: inline-block; width: 97%; background-color: white; box-shadow: 4px 4px 2px 0px rgba(0,0,0,0.35)" class='ui label'>
+    <div style="float: left">
+      <div class="ui purple horizontal label">Question</div>
+      <div class="ui large label">Question->11</div>
+    </div>
+    <div style="position:relative; float: right;">
+      <a id=A10033 class="ui blue basic label">See Answers</a>
+      <a class="ui pointing red basic label">By Mohan Bera</a>
+      <a class="ui teal tag label">2</a>
+      <a class="ui orange label">
+        <i class="calendar alternate outline icon"></i>2019-09-30</a>
+      <button hidden id="edit10033" style=" float: bottom; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);" class="circular ui green icon button">
+        <i class="icon pencil alternate"></i>
+      </button>
+      <script>
+        var bool10033=false;
+
+        $(function(){
+
+
+            $("#A10033").click(function ()
+            {
+              if(bool10033===false)
+              {
+                $("#edit10033").visible=true;
+                $("#edit10033").show();
+                bool10033 = true;
+                $("#div10033").append("<br>");
+                $.ajax({
+
+                  url: "/answerData",
+
+                  data:
+                    {
+                      data:10033,
+                      count:"1",
+                    },
+                  success: function(data)
+                  {
+                    if(data!=='not found')
+                    {
+                      $("#answerList10033").empty();
+                      $("#answerList10033").append(data);
+                    }
+                  }
+                });
+              }
+            });
+
+          var count1=0;
+          $("#edit10033").click(function () {
+            if (count1 === 0) {
+            count1=count1+1;
+              $.ajax({
+
+                url: "/editAnswer",
+
+                data:
+                  {
+                    data: 10033,
+                  },
+                success: function(data)
+                {
+                  if(data!=="login error")
+                  {
+                    $("#answerList10033").append(data);
+                  }
+                  else
+                  {
+                    location.reload();
+                  }
+                }
+              });
+          }
+          });
+
+
+        });
+
+      </script>
+
+    </div>
+    <br>
+    <div class="ui divider"></div>
+    <div id="answerList10033"></div>
+  </div>
+  <div class="ui divider"></div>
+  <div id="div10032" style="position: relative; display: inline-block; width: 97%; background-color: white; box-shadow: 4px 4px 2px 0px rgba(0,0,0,0.35)" class='ui label'>
+    <div style="float: left">
+      <div class="ui purple horizontal label">Question</div>
+      <div class="ui large label">Question->10.</div>
+    </div>
+    <div style="position:relative; float: right;">
+      <a id=A10032 class="ui blue basic label">See Answers</a>
+      <a class="ui pointing red basic label">By Mohan Bera</a>
+      <a class="ui teal tag label">2</a>
+      <a class="ui orange label">
+        <i class="calendar alternate outline icon"></i>2019-09-29</a>
+      <button hidden id="edit10032" style=" float: bottom; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);" class="circular ui green icon button">
+        <i class="icon pencil alternate"></i>
+      </button>
+      <script>
+        var bool10032=false;
+
+        $(function(){
+
+
+            $("#A10032").click(function ()
+            {
+              if(bool10032===false)
+              {
+                $("#edit10032").visible=true;
+                $("#edit10032").show();
+                bool10032 = true;
+                $("#div10032").append("<br>");
+                $.ajax({
+
+                  url: "/answerData",
+
+                  data:
+                    {
+                      data:10032,
+                      count:"1",
+                    },
+                  success: function(data)
+                  {
+                    if(data!=='not found')
+                    {
+                      $("#answerList10032").empty();
+                      $("#answerList10032").append(data);
+                    }
+                  }
+                });
+              }
+            });
+
+          var count1=0;
+          $("#edit10032").click(function () {
+            if (count1 === 0) {
+            count1=count1+1;
+              $.ajax({
+
+                url: "/editAnswer",
+
+                data:
+                  {
+                    data: 10032,
+                  },
+                success: function(data)
+                {
+                  if(data!=="login error")
+                  {
+                    $("#answerList10032").append(data);
+                  }
+                  else
+                  {
+                    location.reload();
+                  }
+                }
+              });
+          }
+          });
+
+
+        });
+
+      </script>
+
+    </div>
+    <br>
+    <div class="ui divider"></div>
+    <div id="answerList10032"></div>
+  </div>
+  <div class="ui divider"></div>
+  <div id="div10031" style="position: relative; display: inline-block; width: 97%; background-color: white; box-shadow: 4px 4px 2px 0px rgba(0,0,0,0.35)" class='ui label'>
+    <div style="float: left">
+      <div class="ui purple horizontal label">Question</div>
+      <div class="ui large label">Question->9.</div>
+    </div>
+    <div style="position:relative; float: right;">
+      <a id=A10031 class="ui blue basic label">See Answers</a>
+      <a class="ui pointing red basic label">By Mohan Bera</a>
+      <a class="ui teal tag label">2</a>
+      <a class="ui orange label">
+        <i class="calendar alternate outline icon"></i>2019-09-29</a>
+      <button hidden id="edit10031" style=" float: bottom; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);" class="circular ui green icon button">
+        <i class="icon pencil alternate"></i>
+      </button>
+      <script>
+        var bool10031=false;
+
+        $(function(){
+
+
+            $("#A10031").click(function ()
+            {
+              if(bool10031===false)
+              {
+                $("#edit10031").visible=true;
+                $("#edit10031").show();
+                bool10031 = true;
+                $("#div10031").append("<br>");
+                $.ajax({
+
+                  url: "/answerData",
+
+                  data:
+                    {
+                      data:10031,
+                      count:"1",
+                    },
+                  success: function(data)
+                  {
+                    if(data!=='not found')
+                    {
+                      $("#answerList10031").empty();
+                      $("#answerList10031").append(data);
+                    }
+                  }
+                });
+              }
+            });
+
+          var count1=0;
+          $("#edit10031").click(function () {
+            if (count1 === 0) {
+            count1=count1+1;
+              $.ajax({
+
+                url: "/editAnswer",
+
+                data:
+                  {
+                    data: 10031,
+                  },
+                success: function(data)
+                {
+                  if(data!=="login error")
+                  {
+                    $("#answerList10031").append(data);
+                  }
+                  else
+                  {
+                    location.reload();
+                  }
+                }
+              });
+          }
+          });
+
+
+        });
+
+      </script>
+
+    </div>
+    <br>
+    <div class="ui divider"></div>
+    <div id="answerList10031"></div>
   </div>
   <div class="ui divider"></div>
 

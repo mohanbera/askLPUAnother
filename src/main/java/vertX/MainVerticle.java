@@ -3,10 +3,7 @@ package vertX;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Context;
-import io.vertx.core.Promise;
-import io.vertx.core.Vertx;
+import io.vertx.core.*;
 import io.vertx.core.http.Cookie;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerRequest;
@@ -16,15 +13,14 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.FindOptions;
 import io.vertx.ext.mongo.MongoClient;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.BodyHandler;
 
 import java.io.*;
-import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
 
 public class MainVerticle extends AbstractVerticle
 {
-
 
   MongoClient mongoClient=null;
   JsonObject mongoconfig=null;
@@ -106,6 +102,7 @@ public class MainVerticle extends AbstractVerticle
     Vertx vertx1=Vertx.vertx();
     HttpServer httpServer=vertx1.createHttpServer();
     Router router=Router.router(vertx1);
+    router.route().handler(BodyHandler.create());
     httpServer.requestHandler(router).listen(7777);
 
 
@@ -116,6 +113,7 @@ public class MainVerticle extends AbstractVerticle
 
     router.get("/test").handler(req->
     {
+      req.response().putHeader("Access-Control-Allow-Origin", "*");
       req.response().end("OK");
     });
 
@@ -147,7 +145,7 @@ public class MainVerticle extends AbstractVerticle
     {
       HttpServerResponse response=req.response();
       response.putHeader("Content-Type","text/html");
-      response.end("<h1><p align='cente'>Welcome</p></h1>");
+      response.end("<h1><p align='center'>Welcome</p></h1>");
     });
 
     //////////////////////////// For handling the login information ////////////////////////
@@ -208,6 +206,14 @@ public class MainVerticle extends AbstractVerticle
       HttpServerResponse response=req.response();
       response.putHeader("Content-Type","image/jpg");
       response.sendFile("src/images/background"+num1+".jpg");
+    });
+
+    ///////////////////////////// for faltu ///////////////////////////
+
+    router.get("/redirect").handler(all->
+    {
+      HttpServerResponse response=all.response();
+      all.reroute("https://www.google.com");
     });
 
     ////////////////////////// for handling home page /////////////////////////////////////
@@ -321,12 +327,28 @@ public class MainVerticle extends AbstractVerticle
                           if(resC.succeeded() && resC.result()!=null)
                           {
                             String preLike=resC.result().getString("like");
+                            String ansRegNo=resC.result().getString("regNo");
                             int newLike=Integer.parseInt(preLike)+dif;
                             JsonObject qu2=new JsonObject().put("$set",new JsonObject().put("like",String.valueOf(newLike)));
                             mongoClient.updateCollection("ans",qu1,qu2,resD->
                             {
                               if(resD.succeeded())
                               {
+                                JsonObject jsonObjectA=new JsonObject();
+                                jsonObjectA.put("regNo",ansRegNo);
+                                mongoClient.findOne("userInfo",jsonObjectA,null,allA->
+                                {
+                                  if(allA.succeeded())
+                                  {
+                                    int curLike=allA.result().getInteger("like");
+                                    JsonObject jsonObjectB=new JsonObject();
+                                    jsonObjectB.put("$set",new JsonObject().put("like",curLike+dif));
+                                    mongoClient.updateCollection("userInfo",jsonObjectA,jsonObjectB,allB->
+                                    {
+
+                                    });
+                                  }
+                                });
                                 response.end("OK "+dif);
                               }
                               else
@@ -349,12 +371,28 @@ public class MainVerticle extends AbstractVerticle
                           if(resC.succeeded() && resC.result()!=null)
                           {
                             String preDislike=resC.result().getString("dislike");
+                            String ansRegNo=resC.result().getString("regNo");
                             int newDislike=Integer.parseInt(preDislike)+dif;
                             JsonObject qu2=new JsonObject().put("$set",new JsonObject().put("dislike",String.valueOf(newDislike)));
                             mongoClient.updateCollection("ans",qu1,qu2,resD->
                             {
                               if(resD.succeeded())
                               {
+                                JsonObject jsonObjectA=new JsonObject();
+                                jsonObjectA.put("regNo",ansRegNo);
+                                mongoClient.findOne("userInfo",jsonObjectA,null,allA->
+                                {
+                                  if(allA.succeeded())
+                                  {
+                                    int curDisLike=allA.result().getInteger("dislike");
+                                    JsonObject jsonObjectB=new JsonObject();
+                                    jsonObjectB.put("$set",new JsonObject().put("dislike",curDisLike+dif));
+                                    mongoClient.updateCollection("userInfo",jsonObjectA,jsonObjectB,allB->
+                                    {
+
+                                    });
+                                  }
+                                });
                                 response.end("OK "+dif);
                               }
                               else
@@ -412,6 +450,128 @@ public class MainVerticle extends AbstractVerticle
       req.response().end("OK");
     });
 
+    //////////////////////////
+
+    router.post("/profileInfo").handler(req->
+    {
+      profile profile1=new profile();
+      profile1.sendProfile(req,mongoClient);
+    });
+
+    //////////////////////////
+
+    router.post("/saveProfileData").handler(req->
+    {
+      saveProfileData saveProfileData1=new saveProfileData();
+      saveProfileData1.saveProfile(req,mongoClient);
+    });
+
+    /////////////////////////
+
+    router.post("/sendMessage").handler(req->
+    {
+      sendMessage sendMessage1=new sendMessage();
+      sendMessage1.sendMessageData(req,mongoClient);
+    });
+
+    //////////////////////////
+
+    router.post("/showMessages").handler(req->
+    {
+      showMessages showMessages=new showMessages();
+      showMessages.showMessageData(req,mongoClient);
+    });
+
+    //////////////////////////
+
+    router.post("/showNotification").handler(req->
+    {
+      showNotifications showNotifications1=new showNotifications();
+      showNotifications1.showNotificationData(req,mongoClient);
+    });
+
+    //////////////////////////
+
+    router.post("/sendNotification").handler(req->
+    {
+      sendNotifications sendNotifications1=new sendNotifications();
+      sendNotifications1.sendNotificationData(req,mongoClient);
+    });
+
+    //////////////////////////
+    router.post("/sendUserQuery").handler(req->
+    {
+      sendUserQuery sendUserQuery1=new sendUserQuery();
+      sendUserQuery1.sendUserQueryData(req,mongoClient);
+    });
+
+    //////////////////////////
+
+    router.post("/getUserQuery").handler(req->
+    {
+      getUsetQuery getUsetQuery1=new getUsetQuery();
+      getUsetQuery1.showUserQuery(req,mongoClient);
+    });
+
+    /////////////////////////
+
+    router.post("/deleteUserQuery").handler(req->
+    {
+      deleteUserQuery deleteUserQuery1=new deleteUserQuery();
+      deleteUserQuery1.deleteUserQuery(req, mongoClient);
+    });
+
+    ////////////////////////// For sending all the information of the user ///////////////////////////////////
+    router.get("/information").handler(all->
+    {
+      HttpServerRequest request=all.request();
+      HttpServerResponse response=all.response();
+      int count1=request.cookieCount();
+      if(count1>0)
+      {
+        Cookie cookie=request.getCookie("info");
+        if(cookie==null)
+        {
+          sendErrorMessage(response);
+        }
+        else
+        {
+          String code=cookie.getValue();
+          JsonObject jsonObject=new JsonObject().put("code",code);
+          mongoClient.findOne("userInfo",jsonObject,null,res1->
+          {
+            if(res1.succeeded())
+            {
+              if(res1.result()==null)
+              {
+                sendErrorMessage(response);
+              }
+              else
+              {
+                String name=res1.result().getString("name");
+                String pp=res1.result().getString("pp");
+                String reg=res1.result().getString("regNo");
+                JsonObject jsonObject1=new JsonObject();
+                jsonObject1.put("name",name);
+                jsonObject1.put("pp",pp);
+                jsonObject1.put("reg",reg);
+                response.putHeader("Content-Type","application/json");
+                response.end(jsonObject1.encodePrettily());
+              }
+            }
+            else
+            {
+              sendErrorMessage(response);
+            }
+          });
+        }
+      }
+      else
+      {
+        sendErrorMessage(response);
+      }
+    });
+
     ////////////////////////////for handling the edit answer //////////////////////////////
     router.get("/editAnswer").handler(req->
     {
@@ -441,6 +601,7 @@ public class MainVerticle extends AbstractVerticle
               else
               {
                 String name=res1.result().getString("name");
+                //String regNo=res1.result().getString("regNo");
                 String pp=res1.result().getString("pp");
                 String today= LocalDate.now().toString();
                 String ID=request.getParam("data");
@@ -595,7 +756,6 @@ public class MainVerticle extends AbstractVerticle
       {
         sendErrorMessage(response);
       }
-
     });
 
 
@@ -619,7 +779,8 @@ public class MainVerticle extends AbstractVerticle
             {
               int size = jsonArray.size();
               int size2 = size;
-              for (int i = 0; i < size; i++) {
+              for (int i = 0; i < size; i++)
+              {
                 JsonObject jsonObject1 = jsonArray.getJsonObject(i);
                 String comment = jsonObject1.getString("comment");
                 String name = jsonObject1.getString("name");
@@ -633,8 +794,10 @@ public class MainVerticle extends AbstractVerticle
                 hashMap.put("comment", comment);
                 arrayList.add(hashMap);
                 size2--;
-                if (size2 == 0) {
-                  if (!response.ended()) {
+                if (size2 == 0)
+                {
+                  if (!response.ended())
+                  {
                     Collections.reverse(arrayList);
                     returnAllComments(response, arrayList);
                   }
@@ -687,7 +850,6 @@ public class MainVerticle extends AbstractVerticle
               {
                 if(res.succeeded() && res.result().getJsonArray("answers").size()>0)
                 {
-
                   int views=res.result().getInteger("views");
                   views=views+1;
                   JsonObject jsonObject3=new JsonObject().put("$set",new JsonObject().put("views",views));
@@ -794,7 +956,48 @@ public class MainVerticle extends AbstractVerticle
       {
         sendErrorMessage(response);
       }
+    });
 
+    ///////////////////////////// Send Leader-board data /////////////////////////////////////////
+
+    router.get("/leaderBoard").handler(all->
+    {
+      HttpServerRequest request=all.request();
+      HttpServerResponse response=all.response();
+      ;
+      FindOptions findOptions=new FindOptions();
+      JsonObject qA=new JsonObject();
+      qA.put("like",-1);
+      findOptions.setSort(qA);
+      findOptions.setLimit(100);
+      JsonObject noUse=new JsonObject();
+      JsonArray sendJsonArray=new JsonArray();
+      mongoClient.findWithOptions("userInfo",noUse,findOptions,resA->
+      {
+        if(resA.succeeded())
+        {
+          for(JsonObject jsonObject1:resA.result())
+          {
+            String name=jsonObject1.getString("name");
+            String regNo=jsonObject1.getString("regNo");
+            int like=jsonObject1.getInteger("like");
+            int dislike=jsonObject1.getInteger("dislike");
+
+            JsonObject arrObject=new JsonObject();
+            arrObject.put("value",false);
+            arrObject.put("name",name);
+            arrObject.put("RegNo",regNo);
+            arrObject.put("like",like);
+            arrObject.put("dislike",dislike);
+            sendJsonArray.add(arrObject);
+          }
+          response.end(sendJsonArray.encodePrettily());
+        }
+        else
+        {
+          response.end("error");
+        }
+      });
     });
 
 
@@ -888,6 +1091,7 @@ public class MainVerticle extends AbstractVerticle
       }
     });
 
+
     /////////////////////////////////// to handle save and cancel action ///////////////////////////
     router.get("/editData").handler(req->
     {
@@ -958,7 +1162,8 @@ public class MainVerticle extends AbstractVerticle
                             .put("dislike",dislike)
                             .put("likeID",likeID)
                             .put("dislikeID",dislikeID)
-                            .put("comCount",0);
+                            .put("comCount",0)
+                            .put("regNo",regNo);
                           mongoClient.insert("ans",document,res5->
                           {
                             if(res5.succeeded())
@@ -1024,8 +1229,7 @@ public class MainVerticle extends AbstractVerticle
 
     });
 
-    ///////////////////////////// new question editor /////////////////////////////////////
-
+    ///////////////////////////// new question editor //////////////////////////////
     router.get("/newQuesEdit").handler(req->{
 
       HttpServerRequest request=req.request();
@@ -1034,7 +1238,6 @@ public class MainVerticle extends AbstractVerticle
       returnNewQuesEditPage(response);
 
     });
-
 
     /////////////////////////// for adding new Question ///////////////////////////
     router.get("/addNewQues").handler(all->
@@ -1401,5 +1604,4 @@ public class MainVerticle extends AbstractVerticle
     }
     response.sendFile("src/pages/allCommentsPage.html");
   }
-
 }

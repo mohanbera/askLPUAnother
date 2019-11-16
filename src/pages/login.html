@@ -1,84 +1,99 @@
 <!DOCTYPE html>
-<html id="html1" lang="en">
+<html id="html1" lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+
+  <title>asklpu</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.css"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script type="text/javascript">
-
-
-    $(document).ready(function(){
-
-      $("body").css('background-image','url(/background)');
-      var signIn=true;
-      var signUp=false;
-
-      var error=false;
-      $("#signInBtn").click(function(){
-
-        if(!signIn)
-        {
-          signIn=true;
-          $("#divForSignIn").show();
-          $("#divForSignUp").hide(true);
-          signUp=false;
-        }
-        else
-        {
-          var regNo=$("#regNoInput").val();
-          var password=$("#passwordInput").val();
-          $.ajax({
-
-            url: "/signInData",
-
-            data:
-              {
-                regNo: regNo,
-                password: password,
-              },
-            success: function(data)
-            {
-              if(data==='OK')
-              {
-
-              }
-              else if(data==='error' && error===false)
-              {
-                $('#body').append("<div style='background-color: #F44336; color: white' class=\"ui button\" data-inverted=\"\" data-tooltip=\"Add users to your feed\" data-position=\"bottom left\">\n" +
-                  "  Wrong Reg no or password\n" +
-                  "</div>");
-                error=true;
-              }
-              else
-              {
-                $("#mainBody").html(data);
-              }
-            }
-          });
-        }
-      });
-
-      $("#signUpBtn").click(function () {
-
-        if(!signUp)
-        {
-          signUp=true;
-          $("#divForSignIn").hide(true);
-          $("#divForSignUp").show();
-          signIn=false;
-        }
-      })
-    });
-  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
 
 
 
 </head>
-<body id="mainBody">
+<body>
+<div id="mainBody">
 
+
+
+
+<script>
+
+  $(document).ready(function(){
+
+    //$("body").css('background-image','url(/background)');
+    //$("#bar").hide(true);
+    var signIn=true;
+    var signUp=false;
+
+    var error=false;
+    $("#signInBtn").click(function(){
+
+      if(!signIn)
+      {
+        signIn=true;
+        $("#divForSignIn").show();
+        $("#divForSignUp").hide(true);
+        signUp=false;
+      }
+      else
+      {
+        var regNo=$("#regNoInput").val();
+        var password=$("#passwordInput").val();
+        $.ajax({
+
+          url: "/signInData",
+
+          data:
+            {
+              regNo: regNo,
+              password: password,
+            },
+          success: function(data)
+          {
+            if(data==='OK')
+            {
+
+            }
+            else if(data==='error' && error===false)
+            {
+              $('#body').append("<div style='background-color: #F44336; color: white' class=\"ui button\" data-inverted=\"\" data-tooltip=\"Add users to your feed\" data-position=\"bottom left\">\n" +
+                "  Wrong Reg no or password\n" +
+                "</div>");
+              error=true;
+            }
+            else
+            {
+              window.location.reload();
+            }
+          }
+        });
+      }
+    });
+
+    $("#signUpBtn").click(function () {
+
+      if(!signUp)
+      {
+        signUp=true;
+        $("#divForSignIn").hide(true);
+        $("#divForSignUp").show();
+        signIn=false;
+      }
+    })
+  });
+
+</script>
+
+
+  <div id="app">
+    <v-app>
 <div align="center" id="mainDiv" class="ui massive label" style="width: 400px; height: 700px;  position: absolute; left: 50%;top: 50%;transform: translate(-50%, -50%);box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);">
 
   <div class="ui mini label" style="margin-bottom: 70px">
@@ -113,11 +128,11 @@
   </div>
 
   <div class="ui buttons" style="margin-bottom: 80px; ">
-    <button id="signInBtn" class="ui button" style="color: white;background-color: #8E24AA">Sign In</button>
+    <button id="signInBtn" class="ui button" style="color: white;background-color: #8E24AA">Log In</button>
     <div class="or"></div>
-    <button id="signUpBtn" class="ui button" style="color: white; background-color: #D81B60">Sign Up</button>
-  </div><br>
-
+    <button class="ui button" style="color: white; background-color: #D81B60" v-on:click="guestLoginAction"> Guest </button>
+  </div>
+<div style="position: absolute; bottom: 3%; left: 23%">
   <button class="ui circular facebook icon button">
     <i class="facebook icon"></i>
   </button>
@@ -132,18 +147,159 @@
   </button>
 </div>
 
-<div style="position: absolute; height: 25px; bottom: 10px; left: 10px;" class="ui orange compact menu">
-  <a class="item">
-    <i class="icon mail"></i>
 
-  </a>
-  <a class="item">
-    <i class="icon users"></i>
-    <div class="floating ui teal label">22</div>
-  </a>
+
+          <template>
+            <v-row justify="center">
+              <v-dialog v-model="dialogForGuestLogin" persistent max-width="550">
+                <template v-slot:activator="{ on }">
+                </template>
+                <v-card>
+                  <v-card-title class="headline">ENTER YOUR QUERY HERE.</v-card-title>
+                  <v-divider></v-divider>
+                  <v-row justify="center" align="center">
+                  <v-col cols="12" sm="6" md="6">
+                    <v-text-field
+                      label="Solo"
+                      solo
+                      placeholder="Enter your full name"
+                      dense
+                      v-model="name"
+                    ></v-text-field>
+                    <v-text-field
+                      label="Solo"
+                      solo
+                      placeholder="Mobile number"
+                      dense
+                      v-model="mobileNumber"
+                    ></v-text-field>
+                    <v-text-field
+                      label="Solo"
+                      placeholder="email"
+                      solo
+                      dense
+                      v-model="email"
+                    ></v-text-field>
+                  </v-col>
+
+                  <v-col cols="12" md="10">
+                    <v-textarea
+                      solo
+                      name="input-7-4"
+                      label="Solo textarea"
+                      placeholder="Enter your query here..."
+                      v-model="query"
+                    ></v-textarea>
+                  </v-col>
+                  </v-row>
+                  <v-divider></v-divider>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="green darken-1" text @click="dialogForGuestLogin = false">Cancel</v-btn>
+                    <v-btn color="green darken-1" text v-on:click="saveInfoAction">Save</v-btn>
+                  </v-card-actions>
+                </v-card>
+
+              </v-dialog>
+            </v-row>
+            <v-snackbar
+              v-model="snackBar"
+            >
+              {{ snackBarText }}
+              <v-btn
+                color="pink"
+                text
+                @click="snackBar = false"
+              >
+                Close
+              </v-btn>
+            </v-snackbar>
+          </template>
+
 </div>
+    </v-app>
+  </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      vuetify: new Vuetify(),
 
+      data () {
+        return {
+          name: '',
+          mobileNumber: '',
+          email: '',
+          query: '',
+          dialogForGuestLogin: false,
+          snackBar: false,
+          snackBarText: '',
+        }
+      },
+
+      methods:
+        {
+          guestLoginAction()
+          {
+            this.dialogForGuestLogin=true;
+          },
+
+          saveInfoAction()
+          {
+            if(this.name.length<3)
+            {
+              this.snackBar=true;
+              this.snackBarText="Name length must be more than 2.";
+            }
+            else if(this.mobileNumber.length!==10)
+            {
+              this.snackBar=true;
+              this.snackBarText="mobile Number length must be of 10 length.";
+            }
+            else if(this.email.length<5)
+            {
+              this.snackBar=true;
+              this.snackBarText="email length must be more than 5.";
+            }
+            else if(this.query.length===0)
+            {
+              this.snackBar=true;
+              this.snackBarText="query should not be empty.";
+            }
+            else
+            {
+              this.dialogForGuestLogin = false;
+
+              axios.post("/sendUserQuery",{headers: {
+                    "Content-Type": "application/javascript"
+                  }},
+                {data: {
+                    name: this.name,
+                    mobileNumber: this.mobileNumber,
+                    email: this.email,
+                    query: this.query,
+                  }}).then(response=>
+              {
+                if(response.data==='OK')
+              {
+                this.snackBar=true;
+                this.snackBarText='Your query has been sent.';
+              }
+            else
+              {
+                this.snackBar=true;
+                this.snackBarText='Something went wrong';
+              }
+            });
+            }
+          }
+        }
+    })
+  </script>
+
+</div>
 </body>
 </html>
 
