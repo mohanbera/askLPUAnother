@@ -621,7 +621,7 @@
                   <v-card
                     width="30%"
                     style="position: absolute; left: 34%; top:10%"
-                    min-width="600px"
+                    min-width="500"
                   >
                     <v-card-title>
                       Skills

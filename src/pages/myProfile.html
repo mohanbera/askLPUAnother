@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+  <v-app>
+    <template>
+      <v-card class="overflow-hidden">
+        <v-app-bar
+
+          dark
+          shrink-on-scroll
+          scroll-target="#scrolling-techniques-3"
+          prominent
+          src="https://wallpaperaccess.com/full/1132439.jpg"
+        >
+          <template v-slot:img="{ props }">
+            <v-img
+              v-bind="props"
+              gradient="to top right, rgba(100,115,201,.7), rgba(25,32,72,.7)"
+            ></v-img>
+          </template>
+          <v-spacer></v-spacer>
+          <v-toolbar-title>Designed and created by Mohan Bera</v-toolbar-title>
+          <v-spacer></v-spacer>
+        </v-app-bar>
+        <v-container style="height: auto;">
+          <v-card width="50%" class="mx-auto mt-10">
+            <v-card-title>Projects</v-card-title>
+            <template v-for="project in projects">
+              <v-hover class="mt-2">
+                <template v-slot="{ hover }">
+                  <div
+                    :class="`elevation-${hover ? 24 : 6}`"
+                    class="mx-auto pa-6 transition-swing"
+                  >
+                    <v-row>
+                      <v-icon class="mr-2">widgets</v-icon>
+                      {{project.name}}
+                      <v-spacer></v-spacer>
+                      <v-btn small v-on:click="openWebsite(project.website)">Website</v-btn>
+                      <v-btn small class="ml-3" v-on:click="openWebsite(project.github)">Github</v-btn>
+                    </v-row>
+                  </div>
+                </template>
+              </v-hover>
+            </template>
+          </v-card>
+          <v-card width="50%" class="mx-auto mt-10">
+            <v-card-title>Coding platforms</v-card-title>
+            <template v-for="platform in platforms">
+              <v-hover class="mt-2">
+                <template v-slot="{ hover }">
+                  <div
+                    :class="`elevation-${hover ? 24 : 6}`"
+                    class="mx-auto pa-6 transition-swing"
+                  >
+                    <v-row>
+                      <v-icon class="mr-2">code</v-icon>
+                      {{platform.name}}
+                      <v-spacer></v-spacer>
+                      <v-btn small v-on:click="openWebsite(platform.website)">Website</v-btn>
+
+                    </v-row>
+                  </div>
+                </template>
+              </v-hover>
+            </template>
+          </v-card>
+        </v-container>
+      </v-card>
+    </template>
+  </v-app>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+<script>
+  new Vue({
+    el: '#app',
+    vuetify: new Vuetify(),
+
+    data () {
+      return {
+
+        projects:
+          [
+            {name: "Ask LPU", website: "", github: ""},
+            {name: "Ask LPU", website: "", github: ""},
+            {name: "Ask LPU", website: "", github: ""},
+            {name: "Ask LPU", website: "", github: ""},
+            {name: "Ask LPU", website: "", github: ""},
+            {name: "Ask LPU", website: "", github: ""}
+          ],
+
+        platforms:
+          [
+            {name: "Ask LPU", website: ""},
+            {name: "Ask LPU", website: ""},
+            {name: "Ask LPU", website: ""},
+            {name: "Ask LPU", website: ""},
+            {name: "Ask LPU", website: ""}
+          ]
+
+
+      }
+    },
+    methods:
+      {
+        openWebsite(data)
+        {
+          window.open(data,'_blank');
+        }
+      },
+
+    mounted: function () {
+      this.$nextTick(function () {
+        axios
+          .post('/myProfileData')
+          .then(response => (this.projects=response.data.projects, this.platforms=response.data.platforms));
+      });
+    },
+
+  })
+</script>
+</body>
+</html>

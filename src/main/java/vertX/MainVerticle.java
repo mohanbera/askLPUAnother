@@ -515,6 +515,19 @@ public class MainVerticle extends AbstractVerticle
 
     /////////////////////////
 
+    router.get("/profile").handler(req->
+    {
+      HttpServerResponse response=req.response();
+      response.sendFile("src/pages/myProfile.html");
+    });
+    /////////////////////////
+
+    router.post("/myProfileData").handler(req->
+    {
+      sendMyProfileData sendMyProfileData1=new sendMyProfileData();
+      sendMyProfileData1.sendProfileData(req,mongoClient);
+    });
+
     router.post("/deleteUserQuery").handler(req->
     {
       deleteUserQuery deleteUserQuery1=new deleteUserQuery();
