@@ -4,7 +4,7 @@
     <img class="ui avatar image" src="${str.pp}">
     <div class="content">
       <a class="header">${str.name} <div class="ui red horizontal label">${str.date}</div></a>
-      <div class="description"><b>${str.comment}</b></div>
+      <div><b class="black--text font-weight-regular" style="font-size: 16px; font-family: San Francisco, Roboto, Segoe UI">${str.comment}</b></div>
     </div>
   </div>
 </div>

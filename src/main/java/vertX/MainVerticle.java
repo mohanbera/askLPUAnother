@@ -437,8 +437,12 @@ public class MainVerticle extends AbstractVerticle
       }
     });
 
+    ////////////////////////////  sending styleSheet ///////////////
 
-
+    router.get("/myStyle").handler(req->
+    {
+      req.response().sendFile("src/style/myStyle.css");
+    });
     /////////////////////////// For handling the new signUp information ////////////////////////////
     router.get("/signUpData").handler(req->
     {
