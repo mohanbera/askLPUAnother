@@ -23,125 +23,126 @@
 
 
 
-<script>
+  <script>
 
-  $(document).ready(function(){
+    $(document).ready(function(){
 
-    //$("body").css('background-image','url(/background)');
-    //$("#bar").hide(true);
-    var signIn=true;
-    var signUp=false;
+      //$("body").css('background-image','url(/background)');
+      //$("#bar").hide(true);
+      var signIn=true;
+      var signUp=false;
 
-    var error=false;
-    $("#signInBtn").click(function(){
+      var error=false;
+      $("#signInBtn").click(function(){
 
-      if(!signIn)
-      {
-        signIn=true;
-        $("#divForSignIn").show();
-        $("#divForSignUp").hide(true);
-        signUp=false;
-      }
-      else
-      {
-        var regNo=$("#regNoInput").val();
-        var password=$("#passwordInput").val();
-        $.ajax({
+        if(!signIn)
+        {
+          signIn=true;
+          $("#divForSignIn").show();
+          $("#divForSignUp").hide(true);
+          signUp=false;
+        }
+        else
+        {
+          var regNo=$("#regNoInput").val();
+          var password=$("#passwordInput").val();
+          $.ajax({
 
-          url: "/signInData",
+            url: "/signInData",
 
-          data:
+            data:
+              {
+                regNo: regNo,
+                password: password,
+              },
+            success: function(data)
             {
-              regNo: regNo,
-              password: password,
-            },
-          success: function(data)
-          {
-            if(data==='OK')
-            {
+              if(data==='OK')
+              {
 
+              }
+              else if(data==='error' && error===false)
+              {
+                $('#body').append("<div style='background-color: #F44336; color: white' class=\"ui button\" data-inverted=\"\" data-tooltip=\"Add users to your feed\" data-position=\"bottom left\">\n" +
+                  "  Wrong Reg no or password\n" +
+                  "</div>");
+                error=true;
+              }
+              else
+              {
+                window.location.reload();
+              }
             }
-            else if(data==='error' && error===false)
-            {
-              $('#body').append("<div style='background-color: #F44336; color: white' class=\"ui button\" data-inverted=\"\" data-tooltip=\"Add users to your feed\" data-position=\"bottom left\">\n" +
-                "  Wrong Reg no or password\n" +
-                "</div>");
-              error=true;
-            }
-            else
-            {
-              window.location.reload();
-            }
-          }
-        });
-      }
+          });
+        }
+      });
+
+      $("#signUpBtn").click(function () {
+
+        if(!signUp)
+        {
+          signUp=true;
+          $("#divForSignIn").hide(true);
+          $("#divForSignUp").show();
+          signIn=false;
+        }
+      })
     });
 
-    $("#signUpBtn").click(function () {
-
-      if(!signUp)
-      {
-        signUp=true;
-        $("#divForSignIn").hide(true);
-        $("#divForSignUp").show();
-        signIn=false;
-      }
-    })
-  });
-
-</script>
+  </script>
 
 
   <div id="app">
     <v-app>
-<div align="center" id="mainDiv" class="ui massive label" style="width: 21%; height: 75%;  position: absolute; left: 50%;top: 50%;transform: translate(-50%, -50%);box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);">
+      <div align="center" id="mainDiv" class="ui massive label" v-bind:style="style" style="min-width: 300px; position: absolute; left: 50%;top: 50%;transform: translate(-50%, -50%);box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);">
 
-  <div class="ui mini label" style="margin-bottom: 20%">
-    <h1>Sign In</h1>
-  </div>
+        <div class="ui mini label" style="margin-bottom: 15%">
+          <h1>Sign In</h1>
+        </div>
 
-  <div id="divForSignIn" style="padding-bottom: 40%">
-    <div class="ui input" style="margin-bottom: 2%">
-      <input id="regNoInput" type="text" style="width: 30%" placeholder="Reg no..."><br>
-    </div><br>
-    <div class="ui input" style="margin-bottom: 100px">
-      <input id="passwordInput" type="password" style="width: 17%" placeholder="Password..."><br>
-    </div><br>
-  </div>
+        <div id="divForSignIn" style="padding-bottom: 30%">
+          <div class="ui input" style="margin-bottom: 2%; width: 70%" >
+            <input id="regNoInput" type="text" style="width: 40%" placeholder="Reg no..."><br>
+          </div><br>
+          <div class="ui input" style="margin-bottom: 40%; width: 70%;">
+            <input id="passwordInput" type="password" style="width: 17%;" placeholder="Password..."><br>
+          </div><br>
+        </div>
 
-  <div style="padding-bottom: 15%;left: 50%; right: 50%">
-    <button class="ui circular facebook icon button">
-      <i class="facebook icon"></i>
-    </button>
-    <button class="ui circular twitter icon button">
-      <i class="twitter icon"></i>
-    </button>
-    <button class="ui circular linkedin icon button">
-      <i class="linkedin icon"></i>
-    </button>
-    <button class="ui circular google plus icon button">
-      <i class="google plus icon"></i>
-    </button>
-  </div>
+        <div class="ui buttons" style="left: 50%; right: 50%;" >
+          <button id="signInBtn" class="ui button" style="color: white;background-color: #8E24AA;">Log In</button>
+          <div class="or"></div>
+          <button class="ui button" style="color: white; background-color: #D81B60" v-on:click="guestLoginAction"> Guest </button>
+        </div>
 
-  <div class="ui buttons" style="left: 50%; right: 50%;" >
-    <button id="signInBtn" class="ui button" style="color: white;background-color: #8E24AA">Log In</button>
-    <div class="or"></div>
-    <button class="ui button" style="color: white; background-color: #D81B60" v-on:click="guestLoginAction"> Guest </button>
-  </div>
-
-
+        <div  style="margin-top: 5vh; left: 50%; right: 50%">
+          <button class="ui circular facebook icon button">
+            <i class="facebook icon"></i>
+          </button>
+          <button class="ui circular twitter icon button">
+            <i class="twitter icon"></i>
+          </button>
+          <button class="ui circular linkedin icon button">
+            <i class="linkedin icon"></i>
+          </button>
+          <button class="ui circular google plus icon button">
+            <i class="google plus icon"></i>
+          </button>
+        </div>
 
 
-          <template>
-            <v-row justify="center">
-              <v-dialog v-model="dialogForGuestLogin" persistent max-width="550">
-                <template v-slot:activator="{ on }">
-                </template>
-                <v-card>
-                  <v-card-title class="headline">ENTER YOUR QUERY HERE.</v-card-title>
-                  <v-divider></v-divider>
-                  <v-row justify="center" align="center">
+
+
+
+        <template>
+          <v-row justify="center">
+            <v-dialog v-model="dialogForGuestLogin" persistent max-width="550">
+              <template v-slot:activator="{ on }">
+              </template>
+              <v-card>
+                <v-card-title class="headline">ENTER YOUR QUERY HERE.</v-card-title>
+                <v-divider></v-divider>
+                <v-row justify="center" align="center">
                   <v-col cols="12" sm="6" md="6">
                     <v-text-field
                       label="Solo"
@@ -175,32 +176,32 @@
                       v-model="query"
                     ></v-textarea>
                   </v-col>
-                  </v-row>
-                  <v-divider></v-divider>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="green darken-1" text @click="dialogForGuestLogin = false">Cancel</v-btn>
-                    <v-btn color="green darken-1" text v-on:click="saveInfoAction">Save</v-btn>
-                  </v-card-actions>
-                </v-card>
+                </v-row>
+                <v-divider></v-divider>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" text @click="dialogForGuestLogin = false">Cancel</v-btn>
+                  <v-btn color="green darken-1" text v-on:click="saveInfoAction">Save</v-btn>
+                </v-card-actions>
+              </v-card>
 
-              </v-dialog>
-            </v-row>
-            <v-snackbar
-              v-model="snackBar"
+            </v-dialog>
+          </v-row>
+          <v-snackbar
+            v-model="snackBar"
+          >
+            {{ snackBarText }}
+            <v-btn
+              color="pink"
+              text
+              @click="snackBar = false"
             >
-              {{ snackBarText }}
-              <v-btn
-                color="pink"
-                text
-                @click="snackBar = false"
-              >
-                Close
-              </v-btn>
-            </v-snackbar>
-          </template>
+              Close
+            </v-btn>
+          </v-snackbar>
+        </template>
 
-</div>
+      </div>
     </v-app>
   </div>
 
@@ -220,6 +221,7 @@
           dialogForGuestLogin: false,
           snackBar: false,
           snackBarText: '',
+          style: 'width: 21%;  height: 75%;',
         }
       },
 
@@ -279,7 +281,18 @@
             });
             }
           }
-        }
+        },
+      mounted: function () {
+        this.$nextTick(function ()
+        {
+          var height=window.screen.availHeight;
+          var width=window.screen.availWidth;
+          if(height>=width)
+          {
+            this.style="width: 70%;  height: 75%";
+          }
+        })
+      }
     })
   </script>
 

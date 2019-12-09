@@ -155,7 +155,7 @@
         v-bind:color="colorName"
         dense
         dark
-        width="20%"
+        v-bind:width="sliderWidth"
       >
         <v-list-item>
           <v-row class="justify-center">
@@ -195,7 +195,7 @@
 
                     <template>
                       <div class="text-center">
-                        <v-menu v-if="profile.admin" transition="scale-transition" :close-on-content-click="false" min-width="500px" origin="center center">
+                        <v-menu v-if="profile.admin" transition="scale-transition" :close-on-content-click="false" v-bind:min-width="allMailMinWidth" origin="center center">
                           <template v-slot:activator="{ on }">
                             <v-btn icon dark class="mt-2"
                                    v-on="on" v-on:click="showOutQuestions">
@@ -209,14 +209,64 @@
                                 <v-list-item-content>
                                   <v-list-item-title class="teal--text"><v-icon size="20">person_pin</v-icon> {{list.name}} <span class="pl-5">{{list.date}}</span></v-list-item-title>
                                   <p class="font-regular grey--text text--darken-2"><v-icon size="20">edit</v-icon> {{list.query}}</p>
-                                  <v-list-item-title class="teal--text"><v-icon size="20">call</v-icon> {{list.mobileNumber}}<v-spacer></v-spacer> <v-icon size="20">email</v-icon> {{list.email}} <v-spacer></v-spacer> <v-btn style="left: 85%" small color="red lighten-1" dark v-on:click="deleteQuesAction(index)">
-                                      <v-icon dark>delete</v-icon>
-                                    </v-btn> </v-list-item-title>
+                                  <v-list-item-title class="teal--text"><v-icon size="20">call</v-icon> {{list.mobileNumber}}<v-spacer></v-spacer> <v-icon size="20">email</v-icon> {{list.email}} <v-spacer></v-spacer>
+                                    <div class="d-flex flex-row-reverse">
+                                      <v-btn small color="red lighten-1 elevation-12 mr-3" dark v-on:click="deleteQuesAction(index)">
+                                        <v-icon dark>delete</v-icon>
+                                      </v-btn>
+
+                                      <v-btn small class="mr-5 elevation-12" color="light-blue darken-1" dark v-on:click="showMenuForMail(list.email)">
+                                        <v-icon dark >send</v-icon>
+                                      </v-btn>
+                                    </div>
+                                  </v-list-item-title>
                                 </v-list-item-content>
                               </v-list-item>
                               <v-divider></v-divider>
                             </template>
                           </v-list>
+
+                          <template>
+                            <v-row justify="center">
+                              <v-dialog v-model="menuForOutMail" scrollable v-bind:max-width="mailMinWidth" persistent>
+
+                                <v-card>
+                                  <v-list>
+                                    <v-spacer></v-spacer>
+                                    <v-list-item>
+                                      <v-list-item-avatar>
+                                        <img v-bind:src="profilePic">
+                                      </v-list-item-avatar>
+
+                                      <v-list-item-content>
+                                        <v-list-item-title>{{profileName}}</v-list-item-title>
+                                      </v-list-item-content>
+
+                                    </v-list-item>
+                                  </v-list>
+
+
+                                  <v-textarea
+                                    v-bind:placeholder="mailPlaceholder"
+                                    size="350"
+                                    solo
+                                    rounded
+                                    v-model="mailMessage"
+                                    elevation="10"
+                                  ></v-textarea>
+
+                                  <v-card-actions>
+                                    <v-spacer></v-spacer>
+
+                                    <v-btn text @click="menuForOutMail = false">Cancel</v-btn>
+                                    <v-btn color="primary" text @click="menuForOutMail = false" v-on:click="sendMail">Send</v-btn>
+                                  </v-card-actions>
+                                </v-card>
+
+                              </v-dialog>
+                            </v-row>
+                          </template>
+
                         </v-menu>
                       </div>
                     </template>
@@ -519,12 +569,12 @@
                 </v-toolbar>
 
 
-
+          <!--------------all profile ---------------->
+          <v-row>
+            <v-col>
                 <template>
                   <v-card
-                    style="padding-right: 20px; padding-bottom: 30px; position: absolute; left:5%; top:10%;"
-                    width="25%"
-
+                    class="mt-2 mb-4 pa-2 ml-2 mr-10"
                   >
                     <v-card-title>
                     </v-card-title>
@@ -616,51 +666,12 @@
                   </v-card>
                 </template>
 
-
-                <! ---------------Skills-------------------->
-                <template>
-                  <v-card
-                    width="30%"
-                    style="position: absolute; left: 34%; top:10%"
-                    min-width="500"
-                  >
-                    <v-card-title>
-                      Skills
-                    </v-card-title>
-                    <v-divider></v-divider>
-
-                    <template  class="grow" v-for="(skill,i) in skills" >
-                      <v-list-item :key="i">
-                        <v-btn class="ma-2" color="teal lighten-1" dark>
-                          <v-icon dark>security</v-icon>
-                        </v-btn>
-                        <div class="my-2">
-                          <v-btn depressed small>{{skill.name}}</v-btn>
-                        </div>
-                        <v-spacer></v-spacer>
-                        <v-rating
-                          v-model="skill.rating"
-                          v-bind:readonly="true"
-                          background-color="purple lighten-3"
-                          color="purple"
-                          small
-                        ></v-rating>
-                      </v-list-item>
-                      <v-divider></v-divider>
-                    </template>
-
-                    <v-card-text class="headline font-weight-bold">
-                    </v-card-text>
-                  </v-card>
-                </template>
-
                 <! --------------------- Education ------------------>
 
                 <v-spacer></v-spacer>
                 <template>
                   <v-card
-                    style="position: absolute; left:5%; top:55%; width: 35%"
-                    class="mx-auto"
+                    class="mt-2 mb-2 ml-2 mr-10"
                   >
                     <v-card-title>
                       Education
@@ -690,14 +701,51 @@
                     </v-card-text>
                   </v-card>
                 </template>
+            </v-col>
+
+
+            <! ---------------Skills-------------------->
+            <v-col>
+            <template>
+              <v-card
+                class="mt-2 mb-2 mr-2"
+              >
+                <v-card-title>
+                  Skills
+                </v-card-title>
+                <v-divider></v-divider>
+
+                <template  class="grow" v-for="(skill,i) in skills" >
+                  <v-list-item :key="i">
+                    <v-btn class="ma-2" color="teal lighten-1" dark>
+                      <v-icon dark>security</v-icon>
+                    </v-btn>
+                    <div class="my-2">
+                      <v-btn depressed small>{{skill.name}}</v-btn>
+                    </div>
+                    <v-spacer></v-spacer>
+                    <v-rating
+                      v-model="skill.rating"
+                      v-bind:readonly="true"
+                      background-color="purple lighten-3"
+                      color="purple"
+                      small
+                    ></v-rating>
+                  </v-list-item>
+                  <v-divider></v-divider>
+                </template>
+
+                <v-card-text class="headline font-weight-bold">
+                </v-card-text>
+              </v-card>
+            </template>
 
 
                 <! ------------------Projects-------------------->
-                <v-spacer></v-spacer>
+
                 <template>
                   <v-card
-                    style="position: absolute; top:49%; left: 44%; width:500px"
-                    min-width="500px"
+                    class="mt-2 mb-2"
                   >
                     <v-card-title>
                       Projects
@@ -723,14 +771,14 @@
                     </v-card-text>
                   </v-card>
                 </template>
+            </v-col>
 
                 <! ----------------------- Achievments -------------------------->
 
-                <v-spacer></v-spacer>
+            <v-col>
                 <template>
                   <v-card
-                    style="position: absolute; top:10%; left: 69%; width:500px"
-                    min-width="500px"
+                    class="mt-2 mb-2"
                   >
                     <v-card-title>
                       Achievements
@@ -759,11 +807,10 @@
 
                 <! ---------------------Online Platforms ------------------------>
 
-                <v-spacer></v-spacer>
+
                 <template>
                   <v-card
-                    style="position: absolute; top:45%; left: 73%; width:300px; "
-                    min-width="300px"
+                    class="mt-2 mb-2"
                   >
                     <v-card-title>
                       Online Platforms
@@ -774,7 +821,7 @@
 
                         <v-list-item  class="grow">
                           <v-spacer></v-spacer>
-                          <v-list-item-avatar size="50px" color="teal lighten-1">
+                          <v-list-item-avatar size="50px" color="teal lighten-1" class="mr-2">
                             <v-img
                               class="elevation-6"
                               v-bind:src="platforms[0].link"
@@ -822,7 +869,7 @@
                       <v-row justify="center">
                         <v-list-item class="grow">
                           <v-spacer></v-spacer>
-                          <v-list-item-avatar size="50px" color="teal lighten-1">
+                          <v-list-item-avatar size="50px" color="teal lighten-1" class="mr-2">
                             <v-img
                               class="elevation-6"
                               v-bind:src="platforms[5].link"
@@ -845,12 +892,15 @@
                     </v-card-text>
                   </v-card>
                 </template>
+            </v-col>
 
-                <v-spacer></v-spacer>
+
+
+
+            <v-col>
                 <template>
                   <v-card
-                    style="position: absolute; top:78%; left: 73%; width:440px"
-                    min-width="440px"
+                    class="mt-2 mb-2 mr-3"
                   >
                     <v-card-title>
                       Hobbies
@@ -864,8 +914,7 @@
                 </template>
                 <template>
                   <v-card
-                    style="position: absolute; top:45%; left: 90%; width:100px; height: 295px"
-                    min-width="50px"
+                    class="mt-2 mb-2 mr-3"
                   >
                     <template v-for="icon in connectionIcons">
                       <v-list>
@@ -880,6 +929,8 @@
                     </v-card-text>
                   </v-card>
                 </template>
+            </v-col>
+          </v-row>
 
           <v-snackbar
             v-model="snackBar"
@@ -1085,7 +1136,7 @@
         <i class="icon edit outline"></i>
       </button>
 
-      <div id="searchBar" style="position: absolute; left:25%; top:25%; width: 50%; box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);" class="ui fluid green action input">
+      <div id="searchBar" style="position: absolute; top:25%; width: 50%; box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);" v-bind:style="searchBarLeft" class="ui fluid green action input">
         <input id="search" type="text" placeholder="Search...">
         <div id="searchButton" class="ui button">Search</div>
       </div>
@@ -1096,7 +1147,7 @@ overflow-y: auto; overflow-x: hidden;  height: 75%; position: absolute; width: 7
 
       </div>
 
-      <div style="position:absolute; color: grey;left: 20px; top: 60px; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);" class="ui selection dropdown">
+      <div v-if="!mobile" style="position:absolute; color: grey;left: 20px; top: 60px; box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.45);" class="ui selection dropdown">
         <input type="hidden" name="select">
         <i class="dropdown icon"></i>
         <div class="default text">Select</div>
@@ -1390,6 +1441,9 @@ overflow-y: auto; overflow-x: hidden;  height: 75%; position: absolute; width: 7
     data() {
       return {
         drawer: null,
+        sliderWidth: "25%",
+        searchBarLeft: "left: 25%",
+        mobile: false,
         profileName: '',
         profileReg: '',
         items: [
@@ -1520,6 +1574,13 @@ overflow-y: auto; overflow-x: hidden;  height: 75%; position: absolute; width: 7
           ],
         outQuestions:
           [],
+        menuForMail: [],
+        menuForOutMail: false,
+        mailMessage: "",
+        mailReciever: '',
+        mailPlaceholder: '',
+        mailMinWidth: "40%",
+        allMailMinWidth: "30%",
       }
     },
     methods:
@@ -1788,6 +1849,7 @@ overflow-y: auto; overflow-x: hidden;  height: 75%; position: absolute; width: 7
         )
           {
             this.$delete(this.outQuestions,index);
+            this.$delete(this.menuForMail, index);
             this.snackBar = true;
             this.snackBarText = 'Quetion deleted';
           }
@@ -1799,10 +1861,71 @@ overflow-y: auto; overflow-x: hidden;  height: 75%; position: absolute; width: 7
         })
           ;
         },
+
+        showMenuForMail(data)
+        {
+          this.menuForOutMail = true;
+          this.mailReciever=data;
+          this.mailMessage='';
+          this.mailPlaceholder='Write your mail to '+data+'...';
+        },
+
+        sendMail()
+        {
+          var len=this.mailMessage.trim().length;
+          if(len > 1) {
+            axios.post("http://localhost:8080/sendMail", {
+                headers: {
+                  "Content-Type": "application/javascript",
+                }
+              },
+              {
+                data: {
+                  to: this.mailReciever,
+                  message: this.mailMessage,
+                }
+              }).then(response =>
+            {
+              if(response.data === 'OK'
+          )
+            {
+              this.snackBar = true;
+              this.snackBarText = 'mail has been sent to ' + this.mailReciever;
+              this.mailReciever = '';
+              this.mailMessage = '';
+            }
+          else
+            {
+              this.snackBar = true;
+              this.snackBarText = 'Something went wrong';
+            }
+          })
+            ;
+          }
+          else
+          {
+            this.snackBar = true;
+            this.snackBarText = 'Please write something mail is too short';
+          }
+
+        }
       },
 
         mounted: function () {
           this.$nextTick(function () {
+
+
+            var height=window.screen.availHeight;
+            var width=window.screen.availWidth;
+            if(height>=width)
+            {
+              this.sliderWidth='90%';
+              this.searchBarLeft="left: 10%";
+              this.mobile=true;
+              this.mailMinWidth="90%";
+              this.allMailMinWidth="30%";
+            }
+
             axios
               .get('/information')
               .then(response => (this.profileName = response.data.name, this.profilePic = response.data.pp, this.profileReg = response.data.reg)
