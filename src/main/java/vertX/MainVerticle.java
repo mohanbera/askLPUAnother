@@ -151,42 +151,8 @@ public class MainVerticle extends AbstractVerticle
     //////////////////////////// For handling the login information ////////////////////////
     router.get("/signInData").handler(req->
     {
-      HttpServerResponse response = req.response();
-      HttpServerRequest request=req.request();
-      String regNo=request.getParam("regNo");
-      String password=request.getParam("password");
-      mongoClient.findOne("userInfo", new JsonObject().put("regNo",regNo).put("password",password), null, res -> {
-        if(res.result()!=null && res.result().size()>0)
-        {
-          UUID uuid=new UUID(System.currentTimeMillis(),System.currentTimeMillis());
-          String uuids=uuid.toString();
-          JsonObject query1=new JsonObject().put("regNo",regNo);
-          JsonObject query2=new JsonObject().put("$set",new JsonObject().put("code",uuids));
-          mongoClient.updateCollection("userInfo",query1,query2,res1->
-          {
-            if (!res1.succeeded())
-            {
-              res1.cause().printStackTrace();
-              req.response().sendFile("src/pages/login.html");
-            }
-            else
-            {
-              response.addCookie(Cookie.cookie("info",uuids));
-              HashMap<String,String> hashMap=new HashMap<>();
-              String name=res.result().getString("name");
-              String pp=res.result().getString("pp");
-              hashMap.put("name",name);
-              hashMap.put("pp",pp);
-
-              returnHomeTemplate(req.response(),hashMap);
-            }
-          });
-        }
-        else
-        {
-          response.end("error");
-        }
-      });
+      signIn signIn1=new signIn();
+      signIn1.signInData(req, mongoClient);
     });
 
     router.get("/home").handler(req->

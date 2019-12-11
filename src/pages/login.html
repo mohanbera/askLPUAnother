@@ -102,15 +102,15 @@
 
         <div id="divForSignIn" style="padding-bottom: 30%">
           <div class="ui input" style="margin-bottom: 2%; width: 70%" >
-            <input id="regNoInput" type="text" style="width: 40%" placeholder="Reg no..."><br>
+            <input id="regNoInput" v-model="regId" type="text" style="width: 40%" placeholder="Reg no..."><br>
           </div><br>
           <div class="ui input" style="margin-bottom: 40%; width: 70%;">
-            <input id="passwordInput" type="password" style="width: 17%;" placeholder="Password..."><br>
+            <input id="passwordInput" v-model="password" type="password" style="width: 17%;" placeholder="Password..."><br>
           </div><br>
         </div>
 
         <div class="ui buttons" style="left: 50%; right: 50%;" >
-          <button id="signInBtn" class="ui button" style="color: white;background-color: #8E24AA;">Log In</button>
+          <button id="signInBtns" v-on:click="loginAction" class="ui button" style="color: white;background-color: #8E24AA;">Log In</button>
           <div class="or"></div>
           <button class="ui button" style="color: white; background-color: #D81B60" v-on:click="guestLoginAction"> Guest </button>
         </div>
@@ -222,6 +222,8 @@
           snackBar: false,
           snackBarText: '',
           style: 'width: 21%;  height: 75%;',
+          regId: '',
+          password: '',
         }
       },
 
@@ -280,6 +282,24 @@
               }
             });
             }
+          },
+
+          loginAction()
+          {
+            axios.get("http://localhost:7000?regId="+this.regId+"&password="+this.password).then(response=>
+            {
+              if(response.data!=='login error')
+            {
+              document.cookie="info="+response.data;
+              window.location.reload();
+            }
+          else
+            {
+              this.snackBar=true;
+              this.snackBarText='Wrong registration id or password';
+            }
+
+          });
           }
         },
       mounted: function () {

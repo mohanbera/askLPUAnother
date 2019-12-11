@@ -1874,7 +1874,7 @@ overflow-y: auto; overflow-x: hidden;  height: 75%; position: absolute; width: 7
         {
           var len=this.mailMessage.trim().length;
           if(len > 1) {
-            axios.post("http://localhost:8080/sendMail", {
+            axios.post("http://35.244.30.245:8080/sendMail", {
                 headers: {
                   "Content-Type": "application/javascript",
                 }
